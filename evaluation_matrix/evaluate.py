@@ -14,6 +14,8 @@ from tqdm import tqdm
 from miou import calculate_miou_batch
 from dice_coefficient import calculate_dice_batch
 from pixel_accuracy import calculate_pixel_accuracy_batch
+from fwiou import calculate_fwiou_batch
+from boundary_iou import calculate_boundary_iou_batch
 
 
 def get_checkpoint_num_classes(checkpoint):
@@ -86,12 +88,27 @@ def evaluate_model(model, test_loader, device, num_classes, ignore_index=None):
         all_preds.numpy(), all_labels.numpy(), ignore_index
     )
     
+    # Calculate Frequency Weighted IoU
+    fwiou, fwiou_iou_per_class, fwiou_weights = calculate_fwiou_batch(
+        all_preds.numpy(), all_labels.numpy(), num_classes, ignore_index
+    )
+    
+    # Calculate Boundary IoU
+    boundary_iou, boundary_iou_per_class = calculate_boundary_iou_batch(
+        all_preds.numpy(), all_labels.numpy(), num_classes, boundary_width=1, ignore_index=ignore_index
+    )
+    
     metrics = {
         'mIoU': miou,
         'Mean Dice': mean_dice,
         'Pixel Accuracy': pixel_acc,
+        'FWIoU': fwiou,
+        'Boundary IoU': boundary_iou,
         'IoU per class': iou_per_class,
         'Dice per class': dice_per_class,
+        'FWIoU per class': fwiou_iou_per_class,
+        'FWIoU weights': fwiou_weights,
+        'Boundary IoU per class': boundary_iou_per_class,
         'Correct pixels': correct_pixels,
         'Total pixels': total_pixels
     }
@@ -107,6 +124,8 @@ def print_metrics(metrics, class_dict_path=None):
     print(f'Mean IoU (mIoU):        {metrics["mIoU"]:.4f}')
     print(f'Mean Dice Coefficient:   {metrics["Mean Dice"]:.4f}')
     print(f'Pixel Accuracy:          {metrics["Pixel Accuracy"]:.4f}')
+    print(f'Frequency Weighted IoU:  {metrics["FWIoU"]:.4f}')
+    print(f'Boundary IoU:            {metrics["Boundary IoU"]:.4f}')
     print(f'Correct Pixels:          {metrics["Correct pixels"]:,}')
     print(f'Total Pixels:            {metrics["Total pixels"]:,}')
     
@@ -124,6 +143,13 @@ def print_metrics(metrics, class_dict_path=None):
         dice = metrics['Dice per class'][idx]
         if not np.isnan(dice):
             print(f'{class_name:25s}: {dice:.4f}')
+    
+    print('\nPer-class Boundary IoU:')
+    print('-'*60)
+    for idx, class_name in enumerate(class_names):
+        biou = metrics['Boundary IoU per class'][idx]
+        if not np.isnan(biou):
+            print(f'{class_name:25s}: {biou:.4f}')
     
     print('='*60 + '\n')
 
@@ -211,6 +237,8 @@ def main():
         f.write(f'Mean IoU (mIoU):        {metrics["mIoU"]:.4f}\n')
         f.write(f'Mean Dice Coefficient:   {metrics["Mean Dice"]:.4f}\n')
         f.write(f'Pixel Accuracy:          {metrics["Pixel Accuracy"]:.4f}\n')
+        f.write(f'Frequency Weighted IoU:  {metrics["FWIoU"]:.4f}\n')
+        f.write(f'Boundary IoU:            {metrics["Boundary IoU"]:.4f}\n')
         f.write(f'Correct Pixels:          {metrics["Correct pixels"]:,}\n')
         f.write(f'Total Pixels:            {metrics["Total pixels"]:,}\n')
         
@@ -228,6 +256,13 @@ def main():
             dice = metrics['Dice per class'][idx]
             if not np.isnan(dice):
                 f.write(f'{class_name:25s}: {dice:.4f}\n')
+        
+        f.write('\nPer-class Boundary IoU:\n')
+        f.write('-'*60 + '\n')
+        for idx, class_name in enumerate(class_names):
+            biou = metrics['Boundary IoU per class'][idx]
+            if not np.isnan(biou):
+                f.write(f'{class_name:25s}: {biou:.4f}\n')
     
     print(f'Results saved to {output_file}')
 
