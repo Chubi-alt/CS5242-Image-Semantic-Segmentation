@@ -28,7 +28,7 @@ def evaluate_and_visualize():
     # 1. Configuration & Experiment Setup
     # ---------------------------------------------------------
     # IMPORTANT: Update EXPERIMENT_NAME to match your actual folder in 'checkpoints'
-    EXPERIMENT_NAME = "unetpp_efficientnet-b3_improved_v1_20260311_0725"
+    EXPERIMENT_NAME = "unetpp_scratch__improved_v1_20260311_0846"
     # EXPERIMENT_NAME = "unetpp_resnet50_baseline_20260310_0902" 
 
     # BACKBONE = "resnet34"
@@ -42,8 +42,8 @@ def evaluate_and_visualize():
     # WEATHER = "clear"
     WEATHER = "rainy" # You can switch to "rainy" if you want to evaluate on rainy weather subset
     
-    # MODEL_TYPE = "scratch"
-    MODEL_TYPE = "smp"
+    MODEL_TYPE = "scratch"
+    # MODEL_TYPE = "smp"
 
     VOID_INDEX = 30
 
