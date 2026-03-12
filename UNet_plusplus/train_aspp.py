@@ -17,12 +17,13 @@ sys.path.append('..')
 from utils.dataset import CamVidDataset
 from models.builder import build_unetplusplus
 from utils.helpers import generate_run_name, setup_experiment_directories
-from utils.visualizer import plot_loss_curve, visualize_prediction, plot_metric_curve
+# from utils.visualizer import plot_loss_curve, visualize_prediction, plot_metric_curve
 
 # For evaluation metrics, we will implement them in a separate module (e.g., evaluation_matrix.py) and import here.
 from evaluation_matrix.miou import calculate_miou, calculate_iou
 from evaluation_matrix.pixel_accuracy import calculate_pixel_accuracy
 from evaluation_matrix.dice_coefficient import calculate_mean_dice
+from utils.visualizer import plot_loss_curve, visualize_prediction, plot_metric_curve, plot_multi_curve
 
 
 # =============================================================================
@@ -30,11 +31,6 @@ from evaluation_matrix.dice_coefficient import calculate_mean_dice
 # =============================================================================
 
 class DiceLoss(nn.Module):
-    """
-    Dice Loss directly optimises the overlap between prediction and ground truth.
-    Especially effective for class-imbalanced datasets where rare classes contribute
-    very few pixels to the standard CrossEntropy gradient.
-    """
     def __init__(self, num_classes, ignore_index=None, smooth=1e-6):
         super().__init__()
         self.num_classes  = num_classes
@@ -42,21 +38,24 @@ class DiceLoss(nn.Module):
         self.smooth       = smooth
 
     def forward(self, pred, target):
-        pred  = torch.softmax(pred, dim=1)
-        dice  = 0.0
-        count = 0
-        for c in range(self.num_classes):
-            if c == self.ignore_index:
-                continue
-            pred_c       = pred[:, c]
-            target_c     = (target == c).float()
-            intersection = (pred_c * target_c).sum()
-            union        = pred_c.sum() + target_c.sum()
-            if union > 0:
-                dice  += 1 - (2 * intersection + self.smooth) / (union + self.smooth)
-                count += 1
-        return dice / count if count > 0 else torch.tensor(0.0, device=pred.device)
-
+        pred = torch.softmax(pred, dim=1)
+        target_one_hot = F.one_hot(
+            target.clamp(0, self.num_classes - 1), self.num_classes
+        ).permute(0, 3, 1, 2).float()
+        if self.ignore_index is not None:
+            target_one_hot[:, self.ignore_index] = 0
+            pred = pred.clone()
+            pred[:, self.ignore_index] = 0
+        dims = (0, 2, 3)
+        intersection = (pred * target_one_hot).sum(dims)
+        union        = pred.sum(dims) + target_one_hot.sum(dims)
+        valid = union > 0
+        dice  = torch.where(
+            valid,
+            1 - (2 * intersection + self.smooth) / (union + self.smooth),
+            torch.zeros_like(intersection),
+        )
+        return dice[valid].mean() if valid.any() else pred.sum() * 0.0
 
 class FocalLoss(nn.Module):
     """
@@ -90,7 +89,7 @@ class TripleLoss(nn.Module):
                  ce_weight=0.4, dice_weight=0.4, focal_weight=0.2):
         super().__init__()
         # [Enhancement 3] Pass median-frequency class_weights into CrossEntropyLoss
-        self.ce    = nn.CrossEntropyLoss(weight=class_weights)
+        self.ce = nn.CrossEntropyLoss(weight=class_weights, label_smoothing=0.1)
         self.dice  = DiceLoss(num_classes=num_classes, ignore_index=ignore_index)
         self.focal = FocalLoss(gamma=2.0, ignore_index=ignore_index)
         self.ce_weight    = ce_weight
@@ -185,13 +184,17 @@ def compute_class_weights(class_stats_csv: str, void_index: int,
     stats  = pd.read_csv(class_stats_csv)
     col    = "pixels_train" if "pixels_train" in stats.columns else "total_pixels"
     counts = stats[col].values.astype(np.float64)
-    counts[void_index] = 0.0                     # exclude Void from weight calculation
-    freq   = counts / (counts.sum() + 1e-12)
-    valid  = freq[freq > 0]
-    median_f = float(np.median(valid))
-    weights  = np.where(freq > 0, median_f / freq, 0.0)
-    weights[void_index] = 0.0                    # keep Void weight at 0
-    print(f"[*] Class weights computed via median frequency balancing (median = {median_f:.6f})")
+    counts[void_index] = 0.0
+    total  = counts.sum() + 1e-12
+    freq   = counts / total
+    with np.errstate(divide='ignore', invalid='ignore'):
+        weights = np.where(freq > 0, 1.0 / np.sqrt(freq), 0.0)
+    weights[void_index] = 0.0
+    weights = np.clip(weights, 0.0, 3.0)
+    valid = weights[weights > 0]
+    weights = weights / valid.mean()
+    weights[void_index] = 0.0
+    print(f"Sqrt weights: min={weights[weights>0].min():.2f}, max={weights.max():.2f}")
     return torch.tensor(weights, dtype=torch.float32).to(device)
 
 
@@ -260,14 +263,14 @@ def train():
     )
 
     # BACKBONE = "efficientnet-b4"  # Recommended upgrade: stronger than b3
-    # BACKBONE = "efficientnet-b3"
+    BACKBONE = "efficientnet-b3"
     # BACKBONE = "resnet34"
-    BACKBONE = "resnet50"
+    # BACKBONE = "resnet50"
 
-    BATCH_SIZE    = 4
+    BATCH_SIZE    = 8
     EPOCHS        = 200
-    LEARNING_RATE = 2e-4   # encoder will use LEARNING_RATE * 0.1 (see Section 3)
-    IMG_SIZE      = 512
+    LEARNING_RATE = 8e-4   # encoder will use LEARNING_RATE * 0.1 (see Section 3)
+    IMG_SIZE      = 640
     NUM_CLASSES   = 32
     VOID_INDEX    = 30     # Void class (RGB 0,0,0) at index 30 in class_dict.csv
 
@@ -279,7 +282,7 @@ def train():
     WARMUP_EPOCHS = 10
 
     MODEL_TYPE = "smp"   # "smp" | "scratch"
-    PATIENCE   = 20      # early stopping patience (epochs without val mIoU improvement)
+    PATIENCE   = 15      # early stopping patience (epochs without val mIoU improvement)
 
     DATA_ROOT       = "../data/CamVid"
     TRAIN_IMG_DIR   = os.path.join(DATA_ROOT, "train")
@@ -297,7 +300,7 @@ def train():
         exp_paths = setup_experiment_directories(RESUME_EXP_NAME, base_dirs=["checkpoints", "outputs"])
     else:
         run_name = (
-            generate_run_name(model_name="unetpp", backbone=BACKBONE, extra_tag="improved_v2")
+            generate_run_name(model_name="unetpp", backbone=BACKBONE, extra_tag="improved_v3")
             if MODEL_TYPE == "smp"
             else generate_run_name(model_name="unetpp_scratch", backbone='', extra_tag="baseline")
         )
@@ -356,7 +359,7 @@ def train():
         num_classes=NUM_CLASSES,
         ignore_index=VOID_INDEX,
         class_weights=class_weights,
-        ce_weight=0.4, dice_weight=0.4, focal_weight=0.2,
+        ce_weight=0.2, dice_weight=0.5, focal_weight=0.3,  # v2的配比
     )
 
     # [Enhancement 5] Differential learning rates:
@@ -396,6 +399,7 @@ def train():
         history_val_miou   = resume_df["val_miou"].tolist()
         history_val_acc    = resume_df["val_acc"].tolist()
         history_val_dice   = resume_df["val_dice"].tolist() if "val_dice" in resume_df.columns else []
+        history_val_fwiou  = resume_df["val_fwiou"].tolist() if "val_fwiou" in resume_df.columns else []
         best_val_miou      = max(history_val_miou)
         START_EPOCH        = len(history_train_loss) + 1
         print(f"[*] Resumed history from epoch {START_EPOCH - 1}, continuing from epoch {START_EPOCH}")
@@ -406,6 +410,7 @@ def train():
         history_val_miou   = []
         history_val_acc    = []
         history_val_dice   = []
+        history_val_fwiou  = []
         START_EPOCH        = 1
 
     for epoch in range(START_EPOCH, START_EPOCH + EPOCHS):
@@ -452,6 +457,8 @@ def train():
         # Accumulate intersection and union globally for unbiased mIoU
         total_intersection = np.zeros(NUM_CLASSES, dtype=np.float64)
         total_union        = np.zeros(NUM_CLASSES, dtype=np.float64)
+        total_class_pixels = np.zeros(NUM_CLASSES, dtype=np.float64)
+        total_valid_pixels = 0
 
         val_bar = tqdm(val_loader, desc="Validation")
         with torch.no_grad():
@@ -483,6 +490,11 @@ def train():
                     )
                     total_intersection += inter
                     total_union        += uni
+                    gt_flat = masks_np[i].flatten()
+                    valid_px = gt_flat[gt_flat != VOID_INDEX]
+                    total_valid_pixels += len(valid_px)
+                    for c in range(NUM_CLASSES):
+                        total_class_pixels[c] += np.sum(valid_px == c)
 
                 epoch_val_acc  += p_acc
                 epoch_val_dice += m_dice
@@ -495,23 +507,36 @@ def train():
         )
         iou_per_class[VOID_INDEX] = np.nan
         avg_val_miou = float(np.nanmean(iou_per_class))
-
+        
         avg_val_loss = epoch_val_loss / len(val_loader)
         avg_val_acc  = epoch_val_acc  / len(val_loader)
         avg_val_dice = epoch_val_dice / len(val_loader)
-
+        freq_weights = np.where(
+            total_valid_pixels > 0,
+            total_class_pixels / total_valid_pixels,
+            0.0,
+        )
+        fwiou_valid_mask = ~np.isnan(iou_per_class) & (freq_weights > 0)
+        if np.any(fwiou_valid_mask):
+            w = freq_weights[fwiou_valid_mask]
+            w = w / w.sum()
+            avg_val_fwiou = float(np.sum(iou_per_class[fwiou_valid_mask] * w))
+        else:
+            avg_val_fwiou = 0.0
+        history_val_fwiou.append(avg_val_fwiou)
         history_val_loss.append(avg_val_loss)
         history_val_miou.append(avg_val_miou)
         history_val_acc.append(avg_val_acc)
         history_val_dice.append(avg_val_dice)
         print(f"Val Loss: {avg_val_loss:.4f} | Val mIoU: {avg_val_miou:.4f} "
-              f"| Val Acc: {avg_val_acc:.4f} | Val Dice: {avg_val_dice:.4f}")
+              f"| Val FWIoU: {avg_val_fwiou:.4f} | Val Acc: {avg_val_acc:.4f} | Val Dice: {avg_val_dice:.4f}")
 
         history_df = pd.DataFrame({
             'train_loss': history_train_loss,
             'val_loss':   history_val_loss,
             'val_miou':   history_val_miou,
             'val_acc':    history_val_acc,
+            'val_fwiou':  history_val_fwiou,
         })
         history_df.to_csv(
             os.path.join(exp_paths['outputs'], 'training_history.csv'), index=False
@@ -540,12 +565,24 @@ def train():
 
         plot_metric_curve(history_train_loss, history_val_loss,
                           metric_name="Loss",           save_dir=exp_paths['outputs'])
-        plot_metric_curve(None, history_val_miou,
-                          metric_name="mIoU",           save_dir=exp_paths['outputs'])
-        plot_metric_curve(None, history_val_acc,
-                          metric_name="Pixel Accuracy", save_dir=exp_paths['outputs'])
-        plot_metric_curve(None, history_val_dice,
-                          metric_name="Mean Dice",      save_dir=exp_paths['outputs'])
+        plot_multi_curve(
+            {"Val mIoU": history_val_miou, "Val FWIoU": history_val_fwiou},
+            title="UNet++ IoU Metrics Over Epochs",
+            save_dir=exp_paths['outputs'],
+            filename="iou_curve.png",
+        )
+        plot_multi_curve(
+            {"Val Pixel Accuracy": history_val_acc, "Val Mean Dice": history_val_dice},
+            title="UNet++ Accuracy Metrics Over Epochs",
+            save_dir=exp_paths['outputs'],
+            filename="accuracy_curve.png",
+        )
+        # plot_metric_curve(None, history_val_miou,
+        #                   metric_name="mIoU",           save_dir=exp_paths['outputs'])
+        # plot_metric_curve(None, history_val_acc,
+        #                   metric_name="Pixel Accuracy", save_dir=exp_paths['outputs'])
+        # plot_metric_curve(None, history_val_dice,
+        #                   metric_name="Mean Dice",      save_dir=exp_paths['outputs'])
 
     print("\nTraining Complete! You can now evaluate the best.pth checkpoint.")
 

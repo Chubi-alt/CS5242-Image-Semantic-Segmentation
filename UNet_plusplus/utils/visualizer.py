@@ -189,3 +189,22 @@ def visualize_prediction(image, mask_gt, mask_pred, index_to_color, save_dir="ou
     plt.close()
     
     print(f"Prediction visualization saved to: {save_path}")
+
+def plot_multi_curve(series_dict, title, save_dir, filename):
+    """
+    Plot multiple metric curves on a single figure.
+    series_dict: {label: list_of_values}
+    """
+    import matplotlib.pyplot as plt
+    plt.figure(figsize=(10, 5), facecolor='white')
+    for label, values in series_dict.items():
+        plt.plot(range(1, len(values) + 1), values, marker='o', markersize=2, label=label)
+    plt.title(title)
+    plt.xlabel("Epoch")
+    plt.ylabel("Value")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    os.makedirs(save_dir, exist_ok=True)
+    plt.savefig(os.path.join(save_dir, filename), dpi=150)
+    plt.close()

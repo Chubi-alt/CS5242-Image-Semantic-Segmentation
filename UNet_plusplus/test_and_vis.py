@@ -18,6 +18,12 @@ import evaluation_matrix
 from evaluation_matrix.miou import calculate_miou_batch
 from evaluation_matrix.pixel_accuracy import calculate_pixel_accuracy_batch
 from evaluation_matrix.dice_coefficient import calculate_dice_batch
+from evaluation_matrix.fwiou import calculate_fwiou_batch
+from evaluation_matrix.boundary_iou import calculate_boundary_iou_batch
+
+import torch.nn as nn
+import torch.nn.functional as F
+from train_aspp import ASPP  # ASPP class in train_aspp.py
 
 def evaluate_and_visualize():
     """
@@ -28,22 +34,26 @@ def evaluate_and_visualize():
     # 1. Configuration & Experiment Setup
     # ---------------------------------------------------------
     # IMPORTANT: Update EXPERIMENT_NAME to match your actual folder in 'checkpoints'
-    EXPERIMENT_NAME = "unetpp_scratch__improved_v1_20260311_0846"
-    # EXPERIMENT_NAME = "unetpp_resnet50_baseline_20260310_0902" 
+    EXPERIMENT_NAME = "unetpp_efficientnet-b3_improved_v2_20260312_0321"
 
     # BACKBONE = "resnet34"
     # BACKBONE = "resnet50"
     BACKBONE = "efficientnet-b3"
 
+    # ASPP is only uesed in v3 models
+    USE_ASPP = False
+    # USE_ASPP = True
+    DECODER_OUT_CHANNELS = 256
+
     NUM_CLASSES = 32
     IMG_SIZE = 512
-    BATCH_SIZE = 4 # Higher batch size for faster evaluation on L4 GPU
+    BATCH_SIZE = 4
 
     # WEATHER = "clear"
-    WEATHER = "rainy" # You can switch to "rainy" if you want to evaluate on rainy weather subset
+    WEATHER = "rainy"
     
-    MODEL_TYPE = "scratch"
-    # MODEL_TYPE = "smp"
+    # MODEL_TYPE = "scratch"
+    MODEL_TYPE = "smp"
 
     VOID_INDEX = 30
 
@@ -76,10 +86,31 @@ def evaluate_and_visualize():
     # 3. Model and Data Loading
     # ---------------------------------------------------------
     print(f"[*] Loading model weights from: {CHECKPOINT_PATH}")
+    # model = build_unetplusplus(backbone_name=BACKBONE, num_classes=NUM_CLASSES, model_type=MODEL_TYPE)
+    # model.load_state_dict(torch.load(CHECKPOINT_PATH, map_location=device))
+    # model.to(device)
+    # model.eval() # Set to evaluation mode
     model = build_unetplusplus(backbone_name=BACKBONE, num_classes=NUM_CLASSES, model_type=MODEL_TYPE)
-    model.load_state_dict(torch.load(CHECKPOINT_PATH, map_location=device))
+
+    aspp = None
+    if USE_ASPP:
+        aspp = ASPP(in_channels=DECODER_OUT_CHANNELS, out_channels=DECODER_OUT_CHANNELS)
+
+    checkpoint = torch.load(CHECKPOINT_PATH, map_location=device)
+    if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
+        model.load_state_dict(checkpoint["model_state_dict"])
+        if aspp is not None:
+            aspp.load_state_dict(checkpoint["aspp_state_dict"])
+        print("[*] Loaded ASPP checkpoint format")
+    else:
+        model.load_state_dict(checkpoint)
+        print("[*] Loaded standard checkpoint format")
+
     model.to(device)
-    model.eval() # Set to evaluation mode
+    model.eval()
+    if aspp is not None:
+        aspp.to(device)
+        aspp.eval()
 
     # Transformation: Resize only, no random augmentations for testing
     test_transform = A.Compose([A.Resize(height=IMG_SIZE, width=IMG_SIZE)])
@@ -97,7 +128,13 @@ def evaluate_and_visualize():
     with torch.no_grad():
         for images, masks in tqdm(test_loader, desc="Inference"):
             images = images.to(device)
-            outputs = model(images)
+            # outputs = model(images)
+            if aspp is not None:
+                features = model.decoder(*model.encoder(images))
+                features = aspp(features)
+                outputs  = model.segmentation_head(features)
+            else:
+                outputs = model(images)
             
             # Convert logits to class indices
             preds = torch.argmax(outputs, dim=1).cpu().numpy()
@@ -114,6 +151,8 @@ def evaluate_and_visualize():
     iou_per_class[VOID_INDEX] = np.nan  # Explicitly exclude Void from per-class display
     final_acc, _, _ = calculate_pixel_accuracy_batch(all_preds, all_masks)
     final_dice, _ = calculate_dice_batch(all_preds, all_masks, num_classes=NUM_CLASSES)
+    final_fwiou, _, _ = calculate_fwiou_batch(all_preds, all_masks, num_classes=NUM_CLASSES, ignore_index=VOID_INDEX)
+    final_boundary_iou, _ = calculate_boundary_iou_batch(all_preds, all_masks, num_classes=NUM_CLASSES, ignore_index=VOID_INDEX)
 
     # Log results to console
     print("\n" + "="*40)
@@ -121,6 +160,8 @@ def evaluate_and_visualize():
     print(f"Mean IoU (mIoU): {final_miou:.4f}")
     print(f"Pixel Accuracy:  {final_acc:.4f}")
     print(f"Mean Dice:       {final_dice:.4f}")
+    print(f"FWIoU:           {final_fwiou:.4f}")
+    print(f"Boundary IoU:    {final_boundary_iou:.4f}")
     print("="*40)
 
     # ---------------------------------------------------------
@@ -157,6 +198,8 @@ def evaluate_and_visualize():
         f.write(f"Mean IoU (mIoU): {final_miou:.4f}\n")
         f.write(f"Pixel Accuracy:  {final_acc:.4f}\n")
         f.write(f"Mean Dice:       {final_dice:.4f}\n")
+        f.write(f"FWIoU:           {final_fwiou:.4f}\n")
+        f.write(f"Boundary IoU:    {final_boundary_iou:.4f}\n")
         f.write("="*40 + "\n")
         
         # Optional: Save per-class IoU if needed
