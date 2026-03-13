@@ -34,23 +34,26 @@ def evaluate_and_visualize():
     # 1. Configuration & Experiment Setup
     # ---------------------------------------------------------
     # IMPORTANT: Update EXPERIMENT_NAME to match your actual folder in 'checkpoints'
-    EXPERIMENT_NAME = "unetpp_efficientnet-b3_improved_v2_20260312_0321"
+    EXPERIMENT_NAME = "unetpp_efficientnet-b4_improved_v3_20260313_1129"
 
     # BACKBONE = "resnet34"
     # BACKBONE = "resnet50"
-    BACKBONE = "efficientnet-b3"
+    # BACKBONE = "efficientnet-b3"
+    BACKBONE = "efficientnet-b4"
 
     # ASPP is only uesed in v3 models
-    USE_ASPP = False
-    # USE_ASPP = True
-    DECODER_OUT_CHANNELS = 256
+    # USE_ASPP = False
+    USE_ASPP = True
+    DECODER_OUT_CHANNELS = 384
+    # ENCODER_LAST_CHANNELS = 2048
+    ENCODER_LAST_CHANNELS = 448
 
     NUM_CLASSES = 32
-    IMG_SIZE = 512
+    IMG_SIZE = 640
     BATCH_SIZE = 4
 
-    # WEATHER = "clear"
-    WEATHER = "rainy"
+    WEATHER = "clear"
+    # WEATHER = "rainy"
     
     # MODEL_TYPE = "scratch"
     MODEL_TYPE = "smp"
@@ -94,7 +97,8 @@ def evaluate_and_visualize():
 
     aspp = None
     if USE_ASPP:
-        aspp = ASPP(in_channels=DECODER_OUT_CHANNELS, out_channels=DECODER_OUT_CHANNELS)
+        # aspp = ASPP(in_channels=DECODER_OUT_CHANNELS, out_channels=DECODER_OUT_CHANNELS)
+        aspp = ASPP(in_channels=ENCODER_LAST_CHANNELS, out_channels=ENCODER_LAST_CHANNELS)
 
     checkpoint = torch.load(CHECKPOINT_PATH, map_location=device)
     if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
@@ -130,8 +134,9 @@ def evaluate_and_visualize():
             images = images.to(device)
             # outputs = model(images)
             if aspp is not None:
-                features = model.decoder(*model.encoder(images))
-                features = aspp(features)
+                encoder_features = model.encoder(images)
+                encoder_features[-1] = aspp(encoder_features[-1])
+                features = model.decoder(encoder_features)
                 outputs  = model.segmentation_head(features)
             else:
                 outputs = model(images)

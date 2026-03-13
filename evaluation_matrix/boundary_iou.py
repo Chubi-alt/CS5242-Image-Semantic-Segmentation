@@ -6,7 +6,7 @@ Evaluates segmentation quality specifically at object boundaries/edges
 import numpy as np
 import torch
 from scipy.ndimage import binary_erosion, binary_dilation
-from miou import calculate_iou
+from evaluation_matrix.miou import calculate_iou
 
 
 def extract_boundary(mask, boundary_width=1):

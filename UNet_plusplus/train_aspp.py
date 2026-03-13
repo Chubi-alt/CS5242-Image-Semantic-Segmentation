@@ -10,24 +10,22 @@ from tqdm import tqdm
 import numpy as np
 import pandas as pd
 import sys
-# Add the project root to sys.path to access the sibling evaluation_matrix folder
+import warnings
+
 sys.path.append('..')
 
-# Import custom modules built in previous steps
 from utils.dataset import CamVidDataset
 from models.builder import build_unetplusplus
 from utils.helpers import generate_run_name, setup_experiment_directories
-# from utils.visualizer import plot_loss_curve, visualize_prediction, plot_metric_curve
+from utils.visualizer import plot_loss_curve, visualize_prediction, plot_metric_curve, plot_multi_curve
 
-# For evaluation metrics, we will implement them in a separate module (e.g., evaluation_matrix.py) and import here.
 from evaluation_matrix.miou import calculate_miou, calculate_iou
 from evaluation_matrix.pixel_accuracy import calculate_pixel_accuracy
 from evaluation_matrix.dice_coefficient import calculate_mean_dice
-from utils.visualizer import plot_loss_curve, visualize_prediction, plot_metric_curve, plot_multi_curve
 
 
 # =============================================================================
-# [Enhancement 1 & 3] Loss Functions: Dice + Focal + CrossEntropy (TripleLoss)
+# Loss Functions: Dice + Focal + CrossEntropy (TripleLoss)
 # =============================================================================
 
 class DiceLoss(nn.Module):
@@ -57,13 +55,8 @@ class DiceLoss(nn.Module):
         )
         return dice[valid].mean() if valid.any() else pred.sum() * 0.0
 
+
 class FocalLoss(nn.Module):
-    """
-    Focal Loss down-weights easy (well-classified) examples so the model focuses
-    its capacity on hard, misclassified pixels — particularly beneficial for rare
-    classes that are systematically easy to ignore.
-    gamma=2.0 is the standard value from the original RetinaNet paper.
-    """
     def __init__(self, gamma=2.0, ignore_index=None):
         super().__init__()
         self.gamma        = gamma
@@ -78,18 +71,10 @@ class FocalLoss(nn.Module):
 
 
 class TripleLoss(nn.Module):
-    """
-    Weighted combination of CrossEntropy + Dice + Focal losses.
-      - CrossEntropy (with median-frequency class weights): stable gradient signal
-      - Dice: directly optimises IoU-like overlap for imbalanced classes
-      - Focal: suppresses easy dominant-class pixels, amplifies rare-class gradients
-    Default split: CE=0.4, Dice=0.4, Focal=0.2.
-    """
     def __init__(self, num_classes, ignore_index=None, class_weights=None,
                  ce_weight=0.4, dice_weight=0.4, focal_weight=0.2):
         super().__init__()
-        # [Enhancement 3] Pass median-frequency class_weights into CrossEntropyLoss
-        self.ce = nn.CrossEntropyLoss(weight=class_weights, label_smoothing=0.1)
+        self.ce    = nn.CrossEntropyLoss(weight=class_weights, label_smoothing=0.1)
         self.dice  = DiceLoss(num_classes=num_classes, ignore_index=ignore_index)
         self.focal = FocalLoss(gamma=2.0, ignore_index=ignore_index)
         self.ce_weight    = ce_weight
@@ -103,53 +88,40 @@ class TripleLoss(nn.Module):
 
 
 # =============================================================================
-# [Enhancement 7] ASPP: Atrous Spatial Pyramid Pooling
+# ASPP: Atrous Spatial Pyramid Pooling
 # =============================================================================
 
 class ASPP(nn.Module):
-    """
-    Atrous Spatial Pyramid Pooling (DeepLab v3+) captures multi-scale context by
-    running parallel dilated convolutions at different receptive field sizes.
-    Inserted between the UNet++ decoder output and the segmentation head so the
-    model can reason about both fine-grained local detail and broad scene context
-    before making the final per-pixel class prediction.
-    """
     def __init__(self, in_channels, out_channels=256):
         super().__init__()
         self.branches = nn.ModuleList([
-            # 1x1 conv — captures local pixel-level context
             nn.Sequential(
                 nn.Conv2d(in_channels, out_channels, 1, bias=False),
                 nn.BatchNorm2d(out_channels),
                 nn.ReLU(inplace=True),
             ),
-            # 3x3 dilated conv, dilation rate=6 — medium receptive field
             nn.Sequential(
                 nn.Conv2d(in_channels, out_channels, 3, padding=6, dilation=6, bias=False),
                 nn.BatchNorm2d(out_channels),
                 nn.ReLU(inplace=True),
             ),
-            # 3x3 dilated conv, dilation rate=12 — large receptive field
             nn.Sequential(
                 nn.Conv2d(in_channels, out_channels, 3, padding=12, dilation=12, bias=False),
                 nn.BatchNorm2d(out_channels),
                 nn.ReLU(inplace=True),
             ),
-            # 3x3 dilated conv, dilation rate=18 — very large receptive field
             nn.Sequential(
                 nn.Conv2d(in_channels, out_channels, 3, padding=18, dilation=18, bias=False),
                 nn.BatchNorm2d(out_channels),
                 nn.ReLU(inplace=True),
             ),
         ])
-        # Global average pooling branch captures image-level (scene) context
         self.global_pool = nn.Sequential(
             nn.AdaptiveAvgPool2d(1),
             nn.Conv2d(in_channels, out_channels, 1, bias=False),
-            nn.BatchNorm2d(out_channels),
+            nn.GroupNorm(32, out_channels),
             nn.ReLU(inplace=True),
         )
-        # Fuse all 5 branches (4 dilated + 1 global) back to out_channels
         self.project = nn.Sequential(
             nn.Conv2d(out_channels * 5, out_channels, 1, bias=False),
             nn.BatchNorm2d(out_channels),
@@ -160,7 +132,6 @@ class ASPP(nn.Module):
     def forward(self, x):
         size  = x.shape[-2:]
         feats = [b(x) for b in self.branches]
-        # Upsample global pooling result back to spatial resolution before concat
         feats.append(
             F.interpolate(self.global_pool(x), size=size,
                           mode='bilinear', align_corners=False)
@@ -169,18 +140,10 @@ class ASPP(nn.Module):
 
 
 # =============================================================================
-# [Enhancement 3] Median Frequency Class Weight Computation
+# Median Frequency Class Weight Computation
 # =============================================================================
 
-def compute_class_weights(class_stats_csv: str, void_index: int,
-                           num_classes: int, device: torch.device) -> torch.Tensor:
-    """
-    Computes per-class loss weights using median frequency balancing:
-        weight[c] = median_freq / freq[c]
-    Rare classes (low freq) receive a higher weight so that CrossEntropyLoss
-    penalises their misclassification more strongly than dominant classes.
-    The Void class weight is forced to 0 so it never contributes to the loss.
-    """
+def compute_class_weights(class_stats_csv, void_index, num_classes, device):
     stats  = pd.read_csv(class_stats_csv)
     col    = "pixels_train" if "pixels_train" in stats.columns else "total_pixels"
     counts = stats[col].values.astype(np.float64)
@@ -199,41 +162,29 @@ def compute_class_weights(class_stats_csv: str, void_index: int,
 
 
 # =============================================================================
-# [Enhancement 6] Data Augmentation — driving-scene-aware pipeline
+# Data Augmentation
 # =============================================================================
 
-def get_transforms(img_size=512):
-    """
-    Defines the data augmentation pipelines for training and validation.
-    Augmentations are chosen to simulate realistic variation in dashcam footage:
-      - Geometric: flip, affine, grid distortion (lens warp)
-      - Photometric: colour jitter, greyscale, fog simulation
-      - Regularisation: gaussian blur, coarse dropout
-    """
+def get_transforms(img_size=640):
     train_transform = A.Compose([
         A.Resize(height=img_size, width=img_size),
         A.HorizontalFlip(p=0.5),
         A.Affine(translate_percent=0.05, scale=(0.9, 1.1),
                  rotate=(-10, 10), p=0.4),
-        # Randomly apply one photometric distortion per image for colour robustness
         A.OneOf([
             A.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.3, hue=0.1),
-            A.ToGray(p=1.0),                          # simulate low-light / grey camera
-            A.RandomFog(fog_coef_range=(0.1, 0.3)),   # simulate foggy / rainy conditions
+            A.ToGray(p=1.0),
+            A.RandomFog(fog_coef_range=(0.1, 0.3)),
         ], p=0.5),
         A.GaussianBlur(blur_limit=(3, 5), p=0.2),
-        # GridDistortion simulates radial lens distortion common in dashcam optics
         A.GridDistortion(num_steps=5, distort_limit=0.3, p=0.2),
         A.CoarseDropout(num_holes_range=(4, 8),
                         hole_height_range=(16, 32),
                         hole_width_range=(16, 32), p=0.3),
     ])
-
-    # Validation: deterministic resize only — no stochastic operations
     val_transform = A.Compose([
         A.Resize(height=img_size, width=img_size),
     ])
-
     return train_transform, val_transform
 
 
@@ -242,17 +193,11 @@ def get_transforms(img_size=512):
 # =============================================================================
 
 def train():
-    """
-    Main training loop: data loading, forward/backward passes,
-    validation, checkpointing, and curve visualisation.
-    """
     # ---------------------------------------------------------
-    # 1. Hyperparameters & Configuration Setup
+    # 1. Hyperparameters & Configuration
     # ---------------------------------------------------------
-    # To resume, set RESUME_CHECKPOINT to the path of best.pth.
-    # RESUME_HISTORY_CSV is derived automatically — no need to set manually.
-    # RESUME_CHECKPOINT = "checkpoints/unetpp_resnet50_improved_v2_XXXXXXXX_XXXX/best.pth"
     RESUME_CHECKPOINT  = None
+    # RESUME_CHECKPOINT = "checkpoints/unetpp_resnet50_improved_v3_XXXXXXXX_XXXX/best.pth"
     RESUME_HISTORY_CSV = (
         os.path.join(
             "outputs",
@@ -262,27 +207,25 @@ def train():
         if RESUME_CHECKPOINT is not None else None
     )
 
-    # BACKBONE = "efficientnet-b4"  # Recommended upgrade: stronger than b3
-    BACKBONE = "efficientnet-b3"
-    # BACKBONE = "resnet34"
-    # BACKBONE = "resnet50"
-
-    BATCH_SIZE    = 8
+    # BACKBONE      = "resnet50"
+    # BACKBONE      = "efficientnet-b3"
+    BACKBONE      = "efficientnet-b4"
+    BATCH_SIZE    = 10               # resnet50
+    # BATCH_SIZE    = 12
     EPOCHS        = 200
-    LEARNING_RATE = 8e-4   # encoder will use LEARNING_RATE * 0.1 (see Section 3)
+    LEARNING_RATE = 8e-4 * (10/8) 
+    # LEARNING_RATE = 8e-4 * (12/8)  # = 1.2e-3
     IMG_SIZE      = 640
     NUM_CLASSES   = 32
-    VOID_INDEX    = 30     # Void class (RGB 0,0,0) at index 30 in class_dict.csv
+    VOID_INDEX    = 30
 
-    # Path to class_stats.csv produced by scripts/visualize_class_imbalance.py
-    # Required for median-frequency class weight computation
+    # ResNet-50 encoder 
+    ENCODER_LAST_CHANNELS = 448
+
     CLASS_STATS_CSV = "../scripts/outputs/class_stats.csv"
-
-    # [Enhancement 4] Number of linear warm-up epochs before cosine annealing
-    WARMUP_EPOCHS = 10
-
-    MODEL_TYPE = "smp"   # "smp" | "scratch"
-    PATIENCE   = 15      # early stopping patience (epochs without val mIoU improvement)
+    WARMUP_EPOCHS   = 10
+    MODEL_TYPE      = "smp"
+    PATIENCE        = 20
 
     DATA_ROOT       = "../data/CamVid"
     TRAIN_IMG_DIR   = os.path.join(DATA_ROOT, "train")
@@ -294,21 +237,16 @@ def train():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"[*] Using device: {device}")
 
-    # Reuse existing experiment directory when resuming; create a new one otherwise
     if RESUME_CHECKPOINT is not None:
         RESUME_EXP_NAME = os.path.basename(os.path.dirname(RESUME_CHECKPOINT))
         exp_paths = setup_experiment_directories(RESUME_EXP_NAME, base_dirs=["checkpoints", "outputs"])
     else:
-        run_name = (
-            generate_run_name(model_name="unetpp", backbone=BACKBONE, extra_tag="improved_v3")
-            if MODEL_TYPE == "smp"
-            else generate_run_name(model_name="unetpp_scratch", backbone='', extra_tag="baseline")
-        )
+        run_name  = generate_run_name(model_name="unetpp", backbone=BACKBONE, extra_tag="improved_v3")
         exp_paths = setup_experiment_directories(run_name, base_dirs=["checkpoints", "outputs"])
-    print(f"[*] Experiment initialized: {exp_paths}")
+    print(f"[*] Experiment: {exp_paths}")
 
     # ---------------------------------------------------------
-    # 2. Data Preparation
+    # 2. Data
     # ---------------------------------------------------------
     train_tfm, val_tfm = get_transforms(img_size=IMG_SIZE)
 
@@ -320,51 +258,39 @@ def train():
     val_loader   = DataLoader(val_dataset,   batch_size=BATCH_SIZE, shuffle=False,
                               num_workers=4, pin_memory=True)
 
-    index_to_color = {v: k for k, v in train_dataset.color_to_index.items()}
-
     # ---------------------------------------------------------
-    # 3. Model, Loss, and Optimizer Initialization
+    # 3. Model, Loss, Optimizer
     # ---------------------------------------------------------
     model = build_unetplusplus(
         backbone_name=BACKBONE, num_classes=NUM_CLASSES, model_type=MODEL_TYPE
     ).to(device)
 
-    # [Enhancement 7] ASPP inserted between decoder output and segmentation head.
-    # smp UNet++ decoder outputs 256 channels by default; adjust if your builder differs.
-    DECODER_OUT_CHANNELS = 256
-    aspp = ASPP(in_channels=DECODER_OUT_CHANNELS, out_channels=DECODER_OUT_CHANNELS).to(device)
+    aspp = ASPP(in_channels=ENCODER_LAST_CHANNELS, out_channels=ENCODER_LAST_CHANNELS).to(device)
 
-    # Load checkpoint weights if resuming from a previous run
     if RESUME_CHECKPOINT is not None and os.path.exists(RESUME_CHECKPOINT):
         checkpoint = torch.load(RESUME_CHECKPOINT, map_location=device)
-        # Support both the new dict format (model + aspp) and the legacy state_dict format
         if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
             model.load_state_dict(checkpoint["model_state_dict"])
             aspp.load_state_dict(checkpoint["aspp_state_dict"])
         else:
             model.load_state_dict(checkpoint)
-        print(f"[*] Resumed model weights from: {RESUME_CHECKPOINT}")
+        print(f"[*] Resumed from: {RESUME_CHECKPOINT}")
     else:
-        print("[*] No checkpoint found, training from scratch.")
+        print("[*] Training from scratch.")
 
-    # [Enhancement 3] Compute median-frequency class weights from pixel statistics
     class_weights = None
     if os.path.exists(CLASS_STATS_CSV):
         class_weights = compute_class_weights(CLASS_STATS_CSV, VOID_INDEX, NUM_CLASSES, device)
     else:
         print(f"[!] {CLASS_STATS_CSV} not found — training without class weights.")
 
-    # [Enhancement 1 & 3] TripleLoss: CE (weighted) + Dice + Focal
     criterion = TripleLoss(
         num_classes=NUM_CLASSES,
         ignore_index=VOID_INDEX,
         class_weights=class_weights,
-        ce_weight=0.2, dice_weight=0.5, focal_weight=0.3,  # v2的配比
+        ce_weight=0.2, dice_weight=0.5, focal_weight=0.3,
     )
 
-    # [Enhancement 5] Differential learning rates:
-    # Pretrained encoder uses 10x lower lr to preserve ImageNet features.
-    # Decoder, segmentation head, and ASPP train at the full learning rate.
     optimizer = optim.AdamW([
         {"params": model.encoder.parameters(),           "lr": LEARNING_RATE * 0.1},
         {"params": model.decoder.parameters(),           "lr": LEARNING_RATE},
@@ -372,8 +298,6 @@ def train():
         {"params": aspp.parameters(),                    "lr": LEARNING_RATE},
     ], weight_decay=1e-3)
 
-    # [Enhancement 4] Linear warm-up for WARMUP_EPOCHS, then cosine anneal to eta_min=1e-6.
-    # Warm-up prevents large gradient updates in early epochs when the decoder is random.
     warmup_scheduler = torch.optim.lr_scheduler.LinearLR(
         optimizer, start_factor=0.1, end_factor=1.0, total_iters=WARMUP_EPOCHS
     )
@@ -387,7 +311,7 @@ def train():
     )
 
     # ---------------------------------------------------------
-    # 4. Core Training Loop
+    # 4. Training Loop
     # ---------------------------------------------------------
     best_val_miou    = 0.0
     patience_counter = 0
@@ -398,12 +322,16 @@ def train():
         history_val_loss   = resume_df["val_loss"].tolist()
         history_val_miou   = resume_df["val_miou"].tolist()
         history_val_acc    = resume_df["val_acc"].tolist()
-        history_val_dice   = resume_df["val_dice"].tolist() if "val_dice" in resume_df.columns else []
-        history_val_fwiou  = resume_df["val_fwiou"].tolist() if "val_fwiou" in resume_df.columns else []
+        history_val_dice   = resume_df["val_dice"].tolist() if "val_dice" in resume_df.columns else [float('nan')] * len(history_val_miou)
+        history_val_fwiou  = resume_df["val_fwiou"].tolist() if "val_fwiou" in resume_df.columns else [float('nan')] * len(history_val_miou)
         best_val_miou      = max(history_val_miou)
         START_EPOCH        = len(history_train_loss) + 1
-        print(f"[*] Resumed history from epoch {START_EPOCH - 1}, continuing from epoch {START_EPOCH}")
-        print(f"[*] Restored best_val_miou: {best_val_miou:.4f}")
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            for _ in range(START_EPOCH - 1):
+                scheduler.step()
+        print(f"[*] Scheduler fast-forwarded to epoch {START_EPOCH - 1}, LR: {scheduler.get_last_lr()}")
+        print(f"[*] Resumed history from epoch {START_EPOCH - 1}, best mIoU: {best_val_miou:.4f}")
     else:
         history_train_loss = []
         history_val_loss   = []
@@ -413,10 +341,10 @@ def train():
         history_val_fwiou  = []
         START_EPOCH        = 1
 
-    for epoch in range(START_EPOCH, START_EPOCH + EPOCHS):
-        print(f"\n--- Epoch {epoch}/{START_EPOCH + EPOCHS - 1} ---")
+    for epoch in range(START_EPOCH, EPOCHS + 1):
+        print(f"\n--- Epoch {epoch}/{EPOCHS} ---")
 
-        # ---- Train Phase ----
+        # ---- Train ----
         model.train()
         aspp.train()
         epoch_train_loss = 0.0
@@ -428,12 +356,9 @@ def train():
             optimizer.zero_grad()
 
             with torch.amp.autocast('cuda'):
-                # [Enhancement 7] ASPP forward pass:
-                # 1. Run encoder to get multi-scale feature maps
-                # 2. Fuse them through the UNet++ decoder
-                # 3. Apply ASPP for multi-scale context before the final head
-                features = model.decoder(*model.encoder(images))
-                features = aspp(features)
+                encoder_features = model.encoder(images)
+                encoder_features[-1] = aspp(encoder_features[-1])
+                features = model.decoder(encoder_features)
                 outputs  = model.segmentation_head(features)
                 loss     = criterion(outputs, masks)
 
@@ -447,14 +372,13 @@ def train():
         avg_train_loss = epoch_train_loss / len(train_loader)
         history_train_loss.append(avg_train_loss)
 
-        # ---- Validation Phase ----
+        # ---- Validation ----
         model.eval()
         aspp.eval()
         epoch_val_loss = 0.0
         epoch_val_acc  = 0.0
         epoch_val_dice = 0.0
 
-        # Accumulate intersection and union globally for unbiased mIoU
         total_intersection = np.zeros(NUM_CLASSES, dtype=np.float64)
         total_union        = np.zeros(NUM_CLASSES, dtype=np.float64)
         total_class_pixels = np.zeros(NUM_CLASSES, dtype=np.float64)
@@ -465,9 +389,9 @@ def train():
             for images, masks in val_bar:
                 images, masks = images.to(device), masks.to(device)
 
-                # Mirror the ASPP-augmented forward pass used during training
-                features = model.decoder(*model.encoder(images))
-                features = aspp(features)
+                encoder_features = model.encoder(images)
+                encoder_features[-1] = aspp(encoder_features[-1])
+                features = model.decoder(encoder_features)
                 outputs  = model.segmentation_head(features)
 
                 loss = criterion(outputs, masks)
@@ -481,7 +405,6 @@ def train():
                 preds_np = preds.detach().cpu().numpy()
                 masks_np = masks.detach().cpu().numpy()
 
-                # Accumulate per-sample intersection / union, excluding Void
                 for i in range(preds_np.shape[0]):
                     _, inter, uni = calculate_iou(
                         preds_np[i], masks_np[i],
@@ -490,7 +413,7 @@ def train():
                     )
                     total_intersection += inter
                     total_union        += uni
-                    gt_flat = masks_np[i].flatten()
+                    gt_flat  = masks_np[i].flatten()
                     valid_px = gt_flat[gt_flat != VOID_INDEX]
                     total_valid_pixels += len(valid_px)
                     for c in range(NUM_CLASSES):
@@ -499,18 +422,19 @@ def train():
                 epoch_val_acc  += p_acc
                 epoch_val_dice += m_dice
 
-        # Globally correct mIoU — absent and Void classes excluded via NaN
-        iou_per_class = np.where(
-            total_union > 0,
-            total_intersection / total_union,
-            np.nan,
-        )
+        with np.errstate(invalid='ignore', divide='ignore'):
+            iou_per_class = np.where(
+                total_union > 0,
+                total_intersection / total_union,
+                np.nan,
+            )
         iou_per_class[VOID_INDEX] = np.nan
         avg_val_miou = float(np.nanmean(iou_per_class))
-        
+
         avg_val_loss = epoch_val_loss / len(val_loader)
         avg_val_acc  = epoch_val_acc  / len(val_loader)
         avg_val_dice = epoch_val_dice / len(val_loader)
+
         freq_weights = np.where(
             total_valid_pixels > 0,
             total_class_pixels / total_valid_pixels,
@@ -523,11 +447,13 @@ def train():
             avg_val_fwiou = float(np.sum(iou_per_class[fwiou_valid_mask] * w))
         else:
             avg_val_fwiou = 0.0
-        history_val_fwiou.append(avg_val_fwiou)
+
         history_val_loss.append(avg_val_loss)
         history_val_miou.append(avg_val_miou)
         history_val_acc.append(avg_val_acc)
         history_val_dice.append(avg_val_dice)
+        history_val_fwiou.append(avg_val_fwiou)
+
         print(f"Val Loss: {avg_val_loss:.4f} | Val mIoU: {avg_val_miou:.4f} "
               f"| Val FWIoU: {avg_val_fwiou:.4f} | Val Acc: {avg_val_acc:.4f} | Val Dice: {avg_val_dice:.4f}")
 
@@ -536,6 +462,7 @@ def train():
             'val_loss':   history_val_loss,
             'val_miou':   history_val_miou,
             'val_acc':    history_val_acc,
+            'val_dice':   history_val_dice,
             'val_fwiou':  history_val_fwiou,
         })
         history_df.to_csv(
@@ -545,18 +472,17 @@ def train():
         scheduler.step()
 
         # ---------------------------------------------------------
-        # 5. Checkpointing & Visualization
+        # 5. Checkpoint & Plots
         # ---------------------------------------------------------
         if avg_val_miou > best_val_miou:
             best_val_miou    = avg_val_miou
             patience_counter = 0
             save_path        = os.path.join(exp_paths['checkpoints'], "best.pth")
-            # Save both model and ASPP weights so the checkpoint is self-contained
             torch.save({
                 "model_state_dict": model.state_dict(),
                 "aspp_state_dict":  aspp.state_dict(),
             }, save_path)
-            print(f"[*] New best model saved to {save_path} (mIoU: {best_val_miou:.4f})")
+            print(f"[*] New best saved: {save_path} (mIoU: {best_val_miou:.4f})")
         else:
             patience_counter += 1
             if patience_counter >= PATIENCE:
@@ -564,7 +490,7 @@ def train():
                 break
 
         plot_metric_curve(history_train_loss, history_val_loss,
-                          metric_name="Loss",           save_dir=exp_paths['outputs'])
+                          metric_name="Loss", save_dir=exp_paths['outputs'])
         plot_multi_curve(
             {"Val mIoU": history_val_miou, "Val FWIoU": history_val_fwiou},
             title="UNet++ IoU Metrics Over Epochs",
@@ -577,14 +503,8 @@ def train():
             save_dir=exp_paths['outputs'],
             filename="accuracy_curve.png",
         )
-        # plot_metric_curve(None, history_val_miou,
-        #                   metric_name="mIoU",           save_dir=exp_paths['outputs'])
-        # plot_metric_curve(None, history_val_acc,
-        #                   metric_name="Pixel Accuracy", save_dir=exp_paths['outputs'])
-        # plot_metric_curve(None, history_val_dice,
-        #                   metric_name="Mean Dice",      save_dir=exp_paths['outputs'])
 
-    print("\nTraining Complete! You can now evaluate the best.pth checkpoint.")
+    print("\nTraining Complete!")
 
 
 if __name__ == '__main__':
