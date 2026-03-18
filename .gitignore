@@ -2,3 +2,6 @@ data/
 __pycache__/
 evaluation_matrix/outputs/
 *.txt
+checkpoints/
+test_results/ 
+wandb/
