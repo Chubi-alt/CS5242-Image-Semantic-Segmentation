@@ -1,0 +1,11 @@
+_base_: "base.yaml"
+
+experiment:
+  name: "exp_loss_focal"
+  tags: ["phase3", "loss", "focal"]
+
+loss:
+  type: "focal"
+
+training:
+  report_to: "none"

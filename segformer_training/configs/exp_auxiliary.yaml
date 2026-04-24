@@ -1,0 +1,15 @@
+_base_: "base.yaml"
+
+experiment:
+  name: "exp_auxiliary"
+  tags: ["phase3", "auxiliary"]
+
+model:
+  auxiliary_heads:
+    enabled: true
+    stages: [2, 3]
+    weight: 0.4
+    channels: 256
+
+training:
+  report_to: "none"

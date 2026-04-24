@@ -1,0 +1,14 @@
+_base_: "base.yaml"
+
+experiment:
+  name: "exp_ohem"
+  tags: ["phase3", "loss", "ohem"]
+
+loss:
+  type: "ce"
+  ohem:
+    enabled: true
+    ratio: 0.7
+
+training:
+  report_to: "none"

@@ -1,0 +1,14 @@
+_base_: "exp_b2_all.yaml"
+
+# Phase 0 preflight: 1 epoch B2 训练，验证整条 B2 pipeline 能跑通。~3-5 分钟 on T4。
+# 通过后再跑真 Phase 0（exp_b2_all），避免 3h 后才发现配置错误。
+
+experiment:
+  name: "exp_b2_preflight"
+  tags: ["b2", "preflight", "sanity_check"]
+
+training:
+  num_train_epochs: 1
+  eval_steps: 50
+  save_steps: 50
+  save_total_limit: 1

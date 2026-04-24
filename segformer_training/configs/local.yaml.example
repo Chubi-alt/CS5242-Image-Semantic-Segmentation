@@ -1,0 +1,8 @@
+# configs/local.yaml.example
+# Copy to configs/local.yaml (already in .gitignore) then run:
+#   python3 scripts/run.py --config configs/local.yaml
+# Inherits baseline.yaml so experiment.name and tags are correct.
+_base_: "baseline.yaml"
+
+paths:
+  checkpoints_dir: /root/autodl-tmp/checkpoints

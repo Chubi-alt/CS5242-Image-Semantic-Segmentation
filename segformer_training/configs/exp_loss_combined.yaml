@@ -1,0 +1,19 @@
+_base_: "base.yaml"
+
+experiment:
+  name: "exp_loss_combined"
+  tags: ["phase3", "loss", "combined"]
+
+loss:
+  type: "combined"
+  components:
+    - type: "ce"
+      weight: 0.5
+    - type: "dice"
+      weight: 0.3
+  boundary:
+    enabled: true
+    weight: 0.2
+
+training:
+  report_to: "none"

@@ -1,0 +1,8 @@
+_base_: "base.yaml"
+
+experiment:
+  name: "exp_b2_baseline"
+  tags: ["backbone_ablation", "b2", "baseline"]
+
+model:
+  backbone: "nvidia/mit-b2"

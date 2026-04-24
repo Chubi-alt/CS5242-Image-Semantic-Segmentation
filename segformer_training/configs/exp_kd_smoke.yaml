@@ -1,0 +1,23 @@
+_base_: "base.yaml"
+
+# Smoke test: 2 epochs, 验证 KD pipeline 能跑通。~3-5 分钟 on T4。
+# 用 force_fresh=True 调用，结果不作为真实评估。
+
+experiment:
+  name: "exp_kd_smoke"
+  tags: ["kd", "smoke", "sanity_check"]
+
+training:
+  num_train_epochs: 2
+  learning_rate: 4.0e-5
+  eval_steps: 50
+  save_steps: 50
+  logging_steps: 10
+  save_total_limit: 1
+
+kd:
+  enabled: true
+  method: "logit"
+  teacher_checkpoint: null
+  temperature: 4.0
+  alpha: 0.5

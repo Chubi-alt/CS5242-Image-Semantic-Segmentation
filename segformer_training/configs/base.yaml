@@ -1,0 +1,87 @@
+_base_: null
+
+experiment:
+  name: "default"
+  seed: 42
+  tags: []
+
+model:
+  backbone: "nvidia/mit-b0"
+  pretrained: true
+  num_labels: 11
+  resume_from: null
+  auxiliary_heads:
+    enabled: false
+    stages: [2, 3]
+    weight: 0.4
+    channels: 256
+
+loss:
+  type: "ce"
+  components: []
+  focal_gamma: 2.0
+  boundary:
+    enabled: false
+    weight: 0.2
+    sigma: 5.0
+  ohem:
+    enabled: false
+    ratio: 0.7
+  class_weights: false
+
+augmentation:
+  strategy: "basic"
+  image_size: 512
+  horizontal_flip: true
+  random_scale:
+    enabled: false
+    range: [0.5, 2.0]
+  color_jitter:
+    enabled: false
+    brightness: 0.3
+    contrast: 0.3
+    saturation: 0.3
+    hue: 0.1
+  gaussian_blur:
+    enabled: false
+    kernel_range: [3, 7]
+  classmix:
+    prob: 0.5
+    num_classes: null
+
+evaluation:
+  tta:
+    enabled: false
+    scales: [0.75, 1.0, 1.25, 1.5]
+    flip: true
+  save_predictions: true
+  num_visualizations: -1
+  compute_confusion_matrix: true
+
+training:
+  learning_rate: 6.0e-5
+  num_train_epochs: 50
+  per_device_train_batch_size: 8
+  per_device_eval_batch_size: 8
+  bf16: true
+  eval_strategy: "steps"
+  eval_steps: 200
+  save_strategy: "steps"
+  save_steps: 200
+  save_total_limit: 3
+  logging_steps: 10
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_mean_iou"
+  greater_is_better: true
+  dataloader_num_workers: 4
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  report_to: "wandb"
+
+data:
+  dir: "./data/camvid"
+  ignore_index: 255
+
+paths:
+  results_dir: "../results"
+  checkpoints_dir: null
