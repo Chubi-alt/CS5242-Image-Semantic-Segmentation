@@ -1,7 +1,8 @@
 _base_: "base.yaml"
 
-# Smoke test: 2 epochs, 验证 KD pipeline 能跑通。~3-5 分钟 on T4。
-# 用 force_fresh=True 调用，结果不作为真实评估。
+# Smoke test: 2 epochs, verifies that the KD pipeline runs end-to-end.
+# Takes ~3-5 minutes on a T4. Invoke with force_fresh=True; the resulting
+# metrics are not meant to be used as a real evaluation.
 
 experiment:
   name: "exp_kd_smoke"
