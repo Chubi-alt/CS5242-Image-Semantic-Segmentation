@@ -1,5 +1,28 @@
-data/ 
+# --- Data and Datasets ---
+data/
+# Ignore any specific large zip files
+*.zip
+*.tar.gz
+
+# --- Python and Environment ---
 __pycache__/
+*.py[cod]
+*$py.class
+# Virtual environments
+venv/
+env/
+.venv/
+# Mac system files
+.DS_Store
+
+# --- Model Weights and Large Artifacts ---
+# CRITICAL: Do not upload multi-gigabyte .pth files to GitHub
+checkpoints/
+*.pth
+*.onnx
+
+# --- Experiment Outputs ---
+# Ignore your teammate's outputs
 evaluation_matrix/outputs/
 *.txt
 checkpoints/
@@ -7,3 +30,15 @@ test_results/
 wandb/
 *_results/
 Qwen3-VL-4B-Instruct/
+evaluation_matrix/evaluation_results.txt
+# Ignore your own experiment outputs
+UNet_plusplus/outputs/
+
+# --- IDE and Logs ---
+.vscode/
+.idea/
+*.log
+# Instead of *.txt, ignore specific results but keep requirements.txt
+evaluation_results.txt
+
+# --- Scripts and Notebooks ---

@@ -5,7 +5,7 @@ Weighted by class frequency to handle class imbalance in road scenes
 
 import numpy as np
 import torch
-from miou import calculate_iou
+from evaluation_matrix.miou import calculate_iou
 
 
 def calculate_fwiou(pred_mask, gt_mask, num_classes, ignore_index=None):
