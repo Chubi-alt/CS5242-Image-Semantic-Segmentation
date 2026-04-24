@@ -1,0 +1,6 @@
+Model,Test mIoU,Test PixAcc,Best Val mIoU,Train-Val Gap (last),Epochs
+Custom-v1 (ResNet50),0.3914,0.8780,0.4336,0.1064,32
+Torchvision (ResNet50),0.4303,0.8929,0.4799,0.1336,38
+Improved-v1 (ResNet50+SE),0.4281,0.8926,0.4712,0.1162,40
+Custom-v2 (ResNet101+V3+),0.4446,0.8987,0.4928,0.1084,57
+Improved-v2 (ResNet101+CBAM),0.4473,0.8946,0.5076,0.1088,55

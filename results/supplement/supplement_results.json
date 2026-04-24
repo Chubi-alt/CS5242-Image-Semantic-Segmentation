@@ -1,0 +1,78 @@
+{
+  "tta_ablation": {
+    "single_scale": {
+      "mIoU": 0.41824558333739326,
+      "time": 2.0536086559295654,
+      "augs": 1
+    },
+    "3_scale": {
+      "mIoU": 0.4436044901034093,
+      "time": 3.675161600112915,
+      "augs": 3
+    },
+    "3_scale_flip": {
+      "mIoU": 0.45055400908085874,
+      "time": 6.581351041793823,
+      "augs": 6
+    }
+  },
+  "model_stats": {
+    "total_params": 49333058,
+    "trainable_params": 49333058,
+    "gflops": 26.26530612244898,
+    "latency_ms": 6.797037124633789
+  },
+  "top_confusions": [
+    [
+      263122,
+      "Road",
+      "Sidewalk"
+    ],
+    [
+      201480,
+      "Tree",
+      "Building"
+    ],
+    [
+      200032,
+      "Sky",
+      "Tree"
+    ],
+    [
+      198856,
+      "LaneMkgsDriv",
+      "Road"
+    ],
+    [
+      176439,
+      "Tree",
+      "Sky"
+    ],
+    [
+      158014,
+      "Void",
+      "Building"
+    ],
+    [
+      140806,
+      "Building",
+      "Tree"
+    ],
+    [
+      131464,
+      "Void",
+      "Tree"
+    ],
+    [
+      131257,
+      "Building",
+      "Void"
+    ],
+    [
+      130604,
+      "Truck_Bus",
+      "SUVPickupTruck"
+    ]
+  ],
+  "boundary_fscore": null
+}

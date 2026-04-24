@@ -1,0 +1,5 @@
+Model,Final Train mIoU,Final Val mIoU,Gap,Best Val mIoU
+Custom-v1 (ResNet50),0.5347,0.4283,0.1064,0.4336
+Improved-v1 (ResNet50+SE),0.5874,0.4712,0.1162,0.4712
+Custom-v2 (ResNet101+V3+),0.5976,0.4892,0.1084,0.4928
+Improved-v2 (ResNet101+CBAM),0.6041,0.4953,0.1088,0.5076
