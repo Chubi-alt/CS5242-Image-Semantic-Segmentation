@@ -1,0 +1,3010 @@
+{
+  "counting_accuracy": {
+    "baseline_mean_mae": 30.331129815961468,
+    "mask_mean_mae": 29.505622420020636,
+    "baseline_mean_rmse": 62.93893050557864,
+    "mask_mean_rmse": 61.581236981878035,
+    "baseline_std_mae": 23.312038486438702,
+    "mask_std_mae": 23.69554443415754,
+    "baseline_std_rmse": 61.70750114922474,
+    "mask_std_rmse": 62.51440958983411
+  },
+  "hallucination": {
+    "baseline_mean_rate": 0.0993747146169596,
+    "mask_mean_rate": 0.13606630558869307,
+    "baseline_std": 0.1272458905830098,
+    "mask_std": 0.08513060001265654
+  },
+  "llm_judge": {
+    "baseline_mean_score": null,
+    "mask_mean_score": null,
+    "baseline_std": null,
+    "mask_std": null
+  },
+  "detailed_results": [
+    {
+      "image_name": "0001TP_006840.png",
+      "counting_baseline_mae": 17.0,
+      "counting_mask_mae": 16.789473684210527,
+      "counting_baseline_rmse": 21.29121390324385,
+      "counting_mask_rmse": 20.977431481927127,
+      "counting_details": {
+        "vegetationmisc": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        },
+        "tree": {
+          "ground_truth": 14,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 14,
+          "mask_error": 13
+        },
+        "bicyclist": {
+          "ground_truth": 4,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 4,
+          "mask_error": 4
+        },
+        "trafficlight": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "misc_text": {
+          "ground_truth": 9,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 9,
+          "mask_error": 9
+        },
+        "parkingblock": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "othermoving": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "road": {
+          "ground_truth": 34,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 34,
+          "mask_error": 34
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 20,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 20,
+          "mask_error": 20
+        },
+        "truck_bus": {
+          "ground_truth": 39,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 39,
+          "mask_error": 39
+        },
+        "car": {
+          "ground_truth": 24,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 23,
+          "mask_error": 23
+        },
+        "building": {
+          "ground_truth": 44,
+          "baseline": 0,
+          "mask": 2,
+          "baseline_error": 44,
+          "mask_error": 42
+        },
+        "suvpickuptruck": {
+          "ground_truth": 22,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 22,
+          "mask_error": 22
+        },
+        "fence": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "sidewalk": {
+          "ground_truth": 11,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 11,
+          "mask_error": 11
+        },
+        "column_pole": {
+          "ground_truth": 30,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 30,
+          "mask_error": 30
+        },
+        "sky": {
+          "ground_truth": 27,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 27,
+          "mask_error": 26
+        },
+        "pedestrian": {
+          "ground_truth": 21,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 20,
+          "mask_error": 20
+        },
+        "wall": {
+          "ground_truth": 8,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 8,
+          "mask_error": 8
+        }
+      },
+      "baseline_hallucination_rate": 0.015151515151515152,
+      "mask_hallucination_rate": 0.15384615384615385,
+      "baseline_hallucinated_objects": [
+        "clock",
+        "sign"
+      ],
+      "mask_hallucinated_objects": [
+        "clock",
+        "sign"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "0001TP_006930.png",
+      "counting_baseline_mae": 24.235294117647058,
+      "counting_mask_mae": 24.176470588235293,
+      "counting_baseline_rmse": 35.98202165461164,
+      "counting_mask_rmse": 35.914113234378554,
+      "counting_details": {
+        "car": {
+          "ground_truth": 22,
+          "baseline": 2,
+          "mask": 1,
+          "baseline_error": 20,
+          "mask_error": 21
+        },
+        "vegetationmisc": {
+          "ground_truth": 8,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 8,
+          "mask_error": 8
+        },
+        "fence": {
+          "ground_truth": 11,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 11,
+          "mask_error": 11
+        },
+        "tree": {
+          "ground_truth": 95,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 95,
+          "mask_error": 95
+        },
+        "sidewalk": {
+          "ground_truth": 23,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 23,
+          "mask_error": 23
+        },
+        "column_pole": {
+          "ground_truth": 37,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 37,
+          "mask_error": 37
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 13,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 13,
+          "mask_error": 13
+        },
+        "road": {
+          "ground_truth": 10,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 10,
+          "mask_error": 9
+        },
+        "truck_bus": {
+          "ground_truth": 21,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 21,
+          "mask_error": 21
+        },
+        "bicyclist": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        },
+        "pedestrian": {
+          "ground_truth": 1,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 0,
+          "mask_error": 0
+        },
+        "trafficlight": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "building": {
+          "ground_truth": 54,
+          "baseline": 1,
+          "mask": 2,
+          "baseline_error": 53,
+          "mask_error": 52
+        },
+        "wall": {
+          "ground_truth": 4,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 4,
+          "mask_error": 4
+        },
+        "sky": {
+          "ground_truth": 80,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 80,
+          "mask_error": 80
+        },
+        "suvpickuptruck": {
+          "ground_truth": 22,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 22,
+          "mask_error": 22
+        },
+        "misc_text": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        }
+      },
+      "baseline_hallucination_rate": 0.26666666666666666,
+      "mask_hallucination_rate": 0.09090909090909091,
+      "baseline_hallucinated_objects": [
+        "clock",
+        "sign",
+        "van",
+        "utility"
+      ],
+      "mask_hallucinated_objects": [
+        "clock"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "0001TP_007050.png",
+      "counting_baseline_mae": 18.8,
+      "counting_mask_mae": 18.65,
+      "counting_baseline_rmse": 26.359059163786554,
+      "counting_mask_rmse": 26.236425061353156,
+      "counting_details": {
+        "vegetationmisc": {
+          "ground_truth": 23,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 23,
+          "mask_error": 23
+        },
+        "tree": {
+          "ground_truth": 56,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 55,
+          "mask_error": 55
+        },
+        "trafficlight": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        },
+        "signsymbol": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "misc_text": {
+          "ground_truth": 11,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 11,
+          "mask_error": 11
+        },
+        "parkingblock": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        },
+        "othermoving": {
+          "ground_truth": 6,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 6,
+          "mask_error": 6
+        },
+        "road": {
+          "ground_truth": 32,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 32,
+          "mask_error": 31
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 25,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 25,
+          "mask_error": 25
+        },
+        "truck_bus": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "car": {
+          "ground_truth": 6,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 5,
+          "mask_error": 5
+        },
+        "building": {
+          "ground_truth": 45,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 44,
+          "mask_error": 44
+        },
+        "suvpickuptruck": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "roadshoulder": {
+          "ground_truth": 8,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 8,
+          "mask_error": 8
+        },
+        "fence": {
+          "ground_truth": 11,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 11,
+          "mask_error": 11
+        },
+        "sidewalk": {
+          "ground_truth": 15,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 15,
+          "mask_error": 14
+        },
+        "column_pole": {
+          "ground_truth": 35,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 35,
+          "mask_error": 35
+        },
+        "sky": {
+          "ground_truth": 67,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 67,
+          "mask_error": 67
+        },
+        "pedestrian": {
+          "ground_truth": 3,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "wall": {
+          "ground_truth": 19,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 19,
+          "mask_error": 18
+        }
+      },
+      "baseline_hallucination_rate": 0.2727272727272727,
+      "mask_hallucination_rate": 0.08333333333333333,
+      "baseline_hallucinated_objects": [
+        "sign",
+        "lamppost",
+        "brick"
+      ],
+      "mask_hallucinated_objects": [
+        "sign"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "0001TP_007770.png",
+      "counting_baseline_mae": 11.61111111111111,
+      "counting_mask_mae": 8.666666666666666,
+      "counting_baseline_rmse": 17.787323825941016,
+      "counting_mask_rmse": 11.962905629950907,
+      "counting_details": {
+        "car": {
+          "ground_truth": 4,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "vegetationmisc": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        },
+        "othermoving": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "fence": {
+          "ground_truth": 11,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 11,
+          "mask_error": 11
+        },
+        "tree": {
+          "ground_truth": 6,
+          "baseline": 0,
+          "mask": 2,
+          "baseline_error": 6,
+          "mask_error": 4
+        },
+        "sidewalk": {
+          "ground_truth": 4,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 4,
+          "mask_error": 4
+        },
+        "column_pole": {
+          "ground_truth": 16,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 16,
+          "mask_error": 16
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 31,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 31,
+          "mask_error": 31
+        },
+        "road": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 5,
+          "mask_error": 4
+        },
+        "truck_bus": {
+          "ground_truth": 9,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 9,
+          "mask_error": 9
+        },
+        "signsymbol": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "pedestrian": {
+          "ground_truth": 9,
+          "baseline": 64,
+          "mask": 1,
+          "baseline_error": 55,
+          "mask_error": 8
+        },
+        "trafficlight": {
+          "ground_truth": 4,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 4,
+          "mask_error": 4
+        },
+        "building": {
+          "ground_truth": 30,
+          "baseline": 0,
+          "mask": 2,
+          "baseline_error": 30,
+          "mask_error": 28
+        },
+        "wall": {
+          "ground_truth": 11,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 11,
+          "mask_error": 11
+        },
+        "sky": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 7,
+          "mask_error": 6
+        },
+        "suvpickuptruck": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "misc_text": {
+          "ground_truth": 4,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 4,
+          "mask_error": 4
+        }
+      },
+      "baseline_hallucination_rate": 0.0,
+      "mask_hallucination_rate": 0.012048192771084338,
+      "baseline_hallucinated_objects": [],
+      "mask_hallucinated_objects": [
+        "sign"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "0001TP_009150.png",
+      "counting_baseline_mae": 17.27777777777778,
+      "counting_mask_mae": 16.833333333333332,
+      "counting_baseline_rmse": 27.504545078950134,
+      "counting_mask_rmse": 26.719738854345948,
+      "counting_details": {
+        "car": {
+          "ground_truth": 12,
+          "baseline": 3,
+          "mask": 2,
+          "baseline_error": 9,
+          "mask_error": 10
+        },
+        "vegetationmisc": {
+          "ground_truth": 14,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 14,
+          "mask_error": 14
+        },
+        "roadshoulder": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        },
+        "othermoving": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "tree": {
+          "ground_truth": 71,
+          "baseline": 0,
+          "mask": 4,
+          "baseline_error": 71,
+          "mask_error": 67
+        },
+        "sidewalk": {
+          "ground_truth": 6,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 6,
+          "mask_error": 6
+        },
+        "column_pole": {
+          "ground_truth": 30,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 30,
+          "mask_error": 30
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 10,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 10,
+          "mask_error": 10
+        },
+        "road": {
+          "ground_truth": 9,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 9,
+          "mask_error": 9
+        },
+        "truck_bus": {
+          "ground_truth": 11,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 11,
+          "mask_error": 11
+        },
+        "bicyclist": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "pedestrian": {
+          "ground_truth": 20,
+          "baseline": 1,
+          "mask": 4,
+          "baseline_error": 19,
+          "mask_error": 16
+        },
+        "trafficlight": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "building": {
+          "ground_truth": 34,
+          "baseline": 1,
+          "mask": 3,
+          "baseline_error": 33,
+          "mask_error": 31
+        },
+        "wall": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "sky": {
+          "ground_truth": 74,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 74,
+          "mask_error": 74
+        },
+        "suvpickuptruck": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        },
+        "misc_text": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        }
+      },
+      "baseline_hallucination_rate": 0.05263157894736842,
+      "mask_hallucination_rate": 0.0,
+      "baseline_hallucinated_objects": [
+        "sign"
+      ],
+      "mask_hallucinated_objects": [],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "0006R0_f00990.png",
+      "counting_baseline_mae": 70.125,
+      "counting_mask_mae": 70.0625,
+      "counting_baseline_rmse": 161.76603475390004,
+      "counting_mask_rmse": 161.7523183759664,
+      "counting_details": {
+        "parkingblock": {
+          "ground_truth": 36,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 36,
+          "mask_error": 36
+        },
+        "car": {
+          "ground_truth": 3,
+          "baseline": 2,
+          "mask": 2,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "vegetationmisc": {
+          "ground_truth": 22,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 22,
+          "mask_error": 22
+        },
+        "roadshoulder": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "othermoving": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "fence": {
+          "ground_truth": 6,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 6,
+          "mask_error": 6
+        },
+        "tree": {
+          "ground_truth": 431,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 431,
+          "mask_error": 431
+        },
+        "sidewalk": {
+          "ground_truth": 36,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 36,
+          "mask_error": 35
+        },
+        "column_pole": {
+          "ground_truth": 28,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 28,
+          "mask_error": 28
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 28,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 28,
+          "mask_error": 28
+        },
+        "road": {
+          "ground_truth": 20,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 19,
+          "mask_error": 19
+        },
+        "building": {
+          "ground_truth": 16,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 15,
+          "mask_error": 15
+        },
+        "wall": {
+          "ground_truth": 8,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 8,
+          "mask_error": 8
+        },
+        "sky": {
+          "ground_truth": 477,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 477,
+          "mask_error": 477
+        },
+        "suvpickuptruck": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "misc_text": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        }
+      },
+      "baseline_hallucination_rate": 0.4,
+      "mask_hallucination_rate": 0.2,
+      "baseline_hallucinated_objects": [
+        "van",
+        "sign",
+        "bush",
+        "curb"
+      ],
+      "mask_hallucinated_objects": [
+        "van",
+        "pedestrian",
+        "sign",
+        "bush"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "0006R0_f01020.png",
+      "counting_baseline_mae": 81.29411764705883,
+      "counting_mask_mae": 81.11764705882354,
+      "counting_baseline_rmse": 200.33148999184561,
+      "counting_mask_rmse": 200.31666107910831,
+      "counting_details": {
+        "archway": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "car": {
+          "ground_truth": 9,
+          "baseline": 2,
+          "mask": 3,
+          "baseline_error": 7,
+          "mask_error": 6
+        },
+        "parkingblock": {
+          "ground_truth": 16,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 16,
+          "mask_error": 16
+        },
+        "vegetationmisc": {
+          "ground_truth": 25,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 25,
+          "mask_error": 25
+        },
+        "othermoving": {
+          "ground_truth": 4,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 4,
+          "mask_error": 4
+        },
+        "fence": {
+          "ground_truth": 12,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 12,
+          "mask_error": 12
+        },
+        "tree": {
+          "ground_truth": 545,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 544,
+          "mask_error": 544
+        },
+        "sidewalk": {
+          "ground_truth": 31,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 31,
+          "mask_error": 30
+        },
+        "column_pole": {
+          "ground_truth": 29,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 29,
+          "mask_error": 29
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 48,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 48,
+          "mask_error": 48
+        },
+        "road": {
+          "ground_truth": 15,
+          "baseline": 1,
+          "mask": 2,
+          "baseline_error": 14,
+          "mask_error": 13
+        },
+        "trafficlight": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        },
+        "building": {
+          "ground_truth": 10,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 9,
+          "mask_error": 9
+        },
+        "wall": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        },
+        "sky": {
+          "ground_truth": 617,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 617,
+          "mask_error": 617
+        },
+        "suvpickuptruck": {
+          "ground_truth": 4,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 4,
+          "mask_error": 4
+        },
+        "misc_text": {
+          "ground_truth": 8,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 8,
+          "mask_error": 8
+        }
+      },
+      "baseline_hallucination_rate": 0.4166666666666667,
+      "mask_hallucination_rate": 0.3076923076923077,
+      "baseline_hallucinated_objects": [
+        "van",
+        "pedestrian",
+        "sign",
+        "bush",
+        "flowerbed"
+      ],
+      "mask_hallucinated_objects": [
+        "van",
+        "pedestrian",
+        "grassy",
+        "curb"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "0006R0_f03090.png",
+      "counting_baseline_mae": 4.583333333333333,
+      "counting_mask_mae": 4.583333333333333,
+      "counting_baseline_rmse": 7.135591542869215,
+      "counting_mask_rmse": 7.135591542869215,
+      "counting_details": {
+        "parkingblock": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "othermoving": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "tree": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "sidewalk": {
+          "ground_truth": 1,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 0,
+          "mask_error": 0
+        },
+        "column_pole": {
+          "ground_truth": 18,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 18,
+          "mask_error": 18
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 13,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 13,
+          "mask_error": 13
+        },
+        "road": {
+          "ground_truth": 1,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 0,
+          "mask_error": 0
+        },
+        "pedestrian": {
+          "ground_truth": 3,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "building": {
+          "ground_truth": 4,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "wall": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        },
+        "sky": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        },
+        "misc_text": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        }
+      },
+      "baseline_hallucination_rate": 0.040983606557377046,
+      "mask_hallucination_rate": 0.26666666666666666,
+      "baseline_hallucinated_objects": [
+        "car",
+        "shopping",
+        "crosswalk",
+        "bollard",
+        "sign"
+      ],
+      "mask_hallucinated_objects": [
+        "bollard",
+        "shopping",
+        "sign",
+        "crosswalk"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "0006R0_f03150.png",
+      "counting_baseline_mae": 49.166666666666664,
+      "counting_mask_mae": 49.166666666666664,
+      "counting_baseline_rmse": 117.20376368624953,
+      "counting_mask_rmse": 116.99928774711978,
+      "counting_details": {
+        "parkingblock": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        },
+        "car": {
+          "ground_truth": 8,
+          "baseline": 2,
+          "mask": 1,
+          "baseline_error": 6,
+          "mask_error": 7
+        },
+        "vegetationmisc": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "othermoving": {
+          "ground_truth": 15,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 15,
+          "mask_error": 15
+        },
+        "fence": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        },
+        "tree": {
+          "ground_truth": 438,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 438,
+          "mask_error": 437
+        },
+        "sidewalk": {
+          "ground_truth": 6,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 6,
+          "mask_error": 6
+        },
+        "column_pole": {
+          "ground_truth": 36,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 36,
+          "mask_error": 36
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 39,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 39,
+          "mask_error": 39
+        },
+        "road": {
+          "ground_truth": 18,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 18,
+          "mask_error": 18
+        },
+        "signsymbol": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "pedestrian": {
+          "ground_truth": 23,
+          "baseline": 2,
+          "mask": 2,
+          "baseline_error": 21,
+          "mask_error": 21
+        },
+        "trafficlight": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "building": {
+          "ground_truth": 37,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 36,
+          "mask_error": 36
+        },
+        "wall": {
+          "ground_truth": 10,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 10,
+          "mask_error": 10
+        },
+        "sky": {
+          "ground_truth": 223,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 223,
+          "mask_error": 223
+        },
+        "suvpickuptruck": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "misc_text": {
+          "ground_truth": 18,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 18,
+          "mask_error": 18
+        }
+      },
+      "baseline_hallucination_rate": 0.06329113924050633,
+      "mask_hallucination_rate": 0.15,
+      "baseline_hallucinated_objects": [
+        "van",
+        "shopping",
+        "crosswalk",
+        "sign",
+        "bollard"
+      ],
+      "mask_hallucinated_objects": [
+        "shopping",
+        "bollard",
+        "crosswalk"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "0006R0_f03750.png",
+      "counting_baseline_mae": 81.25,
+      "counting_mask_mae": 81.45,
+      "counting_baseline_rmse": 208.6927166913115,
+      "counting_mask_rmse": 208.71763222114225,
+      "counting_details": {
+        "vegetationmisc": {
+          "ground_truth": 19,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 19,
+          "mask_error": 19
+        },
+        "tree": {
+          "ground_truth": 803,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 803,
+          "mask_error": 803
+        },
+        "bicyclist": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "trafficlight": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "signsymbol": {
+          "ground_truth": 8,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 8,
+          "mask_error": 8
+        },
+        "misc_text": {
+          "ground_truth": 21,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 21,
+          "mask_error": 21
+        },
+        "parkingblock": {
+          "ground_truth": 11,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 11,
+          "mask_error": 11
+        },
+        "othermoving": {
+          "ground_truth": 33,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 33,
+          "mask_error": 33
+        },
+        "road": {
+          "ground_truth": 17,
+          "baseline": 1,
+          "mask": 0,
+          "baseline_error": 16,
+          "mask_error": 17
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 22,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 22,
+          "mask_error": 22
+        },
+        "truck_bus": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "car": {
+          "ground_truth": 37,
+          "baseline": 2,
+          "mask": 0,
+          "baseline_error": 35,
+          "mask_error": 37
+        },
+        "building": {
+          "ground_truth": 12,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 11,
+          "mask_error": 11
+        },
+        "suvpickuptruck": {
+          "ground_truth": 23,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 23,
+          "mask_error": 23
+        },
+        "fence": {
+          "ground_truth": 16,
+          "baseline": 1,
+          "mask": 0,
+          "baseline_error": 15,
+          "mask_error": 16
+        },
+        "sidewalk": {
+          "ground_truth": 23,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 23,
+          "mask_error": 23
+        },
+        "column_pole": {
+          "ground_truth": 57,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 57,
+          "mask_error": 57
+        },
+        "sky": {
+          "ground_truth": 464,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 464,
+          "mask_error": 464
+        },
+        "pedestrian": {
+          "ground_truth": 47,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 46,
+          "mask_error": 46
+        },
+        "wall": {
+          "ground_truth": 11,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 11,
+          "mask_error": 11
+        }
+      },
+      "baseline_hallucination_rate": 0.041025641025641026,
+      "mask_hallucination_rate": 0.16129032258064516,
+      "baseline_hallucinated_objects": [
+        "motorcycle",
+        "bicycle",
+        "trash",
+        "yellow",
+        "blue",
+        "black",
+        "arrow",
+        "person"
+      ],
+      "mask_hallucinated_objects": [
+        "motorcycle",
+        "bicycl",
+        "yellow",
+        "blue",
+        "orange",
+        "purple",
+        "red",
+        "green",
+        "gray",
+        "bicycle"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "0016E5_05730.png",
+      "counting_baseline_mae": 13.8,
+      "counting_mask_mae": 11.266666666666667,
+      "counting_baseline_rmse": 19.573792001892052,
+      "counting_mask_rmse": 15.579901582915513,
+      "counting_details": {
+        "parkingblock": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        },
+        "car": {
+          "ground_truth": 5,
+          "baseline": 2,
+          "mask": 2,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "vegetationmisc": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "othermoving": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "tree": {
+          "ground_truth": 31,
+          "baseline": 2,
+          "mask": 1,
+          "baseline_error": 29,
+          "mask_error": 30
+        },
+        "sidewalk": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "column_pole": {
+          "ground_truth": 31,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 31,
+          "mask_error": 31
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 12,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 12,
+          "mask_error": 12
+        },
+        "road": {
+          "ground_truth": 19,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 19,
+          "mask_error": 18
+        },
+        "pedestrian": {
+          "ground_truth": 10,
+          "baseline": 57,
+          "mask": 1,
+          "baseline_error": 47,
+          "mask_error": 9
+        },
+        "trafficlight": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "building": {
+          "ground_truth": 21,
+          "baseline": 2,
+          "mask": 2,
+          "baseline_error": 19,
+          "mask_error": 19
+        },
+        "wall": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "sky": {
+          "ground_truth": 28,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 28,
+          "mask_error": 28
+        },
+        "misc_text": {
+          "ground_truth": 6,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 6,
+          "mask_error": 6
+        }
+      },
+      "baseline_hallucination_rate": 0.04477611940298507,
+      "mask_hallucination_rate": 0.2,
+      "baseline_hallucinated_objects": [
+        "bicycle",
+        "clock",
+        "sign"
+      ],
+      "mask_hallucinated_objects": [
+        "bicycle",
+        "sign"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "0016E5_06030.png",
+      "counting_baseline_mae": 11.375,
+      "counting_mask_mae": 7.5625,
+      "counting_baseline_rmse": 20.199009876724155,
+      "counting_mask_rmse": 11.360567767501763,
+      "counting_details": {
+        "car": {
+          "ground_truth": 4,
+          "baseline": 2,
+          "mask": 1,
+          "baseline_error": 2,
+          "mask_error": 3
+        },
+        "roadshoulder": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "othermoving": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "fence": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "sidewalk": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 3,
+          "mask_error": 2
+        },
+        "column_pole": {
+          "ground_truth": 16,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 16,
+          "mask_error": 16
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 32,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 32,
+          "mask_error": 32
+        },
+        "road": {
+          "ground_truth": 6,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 6,
+          "mask_error": 5
+        },
+        "signsymbol": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "bicyclist": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "pedestrian": {
+          "ground_truth": 9,
+          "baseline": 76,
+          "mask": 1,
+          "baseline_error": 67,
+          "mask_error": 8
+        },
+        "building": {
+          "ground_truth": 14,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 14,
+          "mask_error": 13
+        },
+        "wall": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "sky": {
+          "ground_truth": 13,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 13,
+          "mask_error": 13
+        },
+        "suvpickuptruck": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "misc_text": {
+          "ground_truth": 18,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 18,
+          "mask_error": 18
+        }
+      },
+      "baseline_hallucination_rate": 0.0,
+      "mask_hallucination_rate": 0.14285714285714285,
+      "baseline_hallucinated_objects": [],
+      "mask_hallucinated_objects": [
+        "tree"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "0016E5_06570.png",
+      "counting_baseline_mae": 10.588235294117647,
+      "counting_mask_mae": 10.529411764705882,
+      "counting_baseline_rmse": 14.724928842332812,
+      "counting_mask_rmse": 14.694937103321955,
+      "counting_details": {
+        "car": {
+          "ground_truth": 10,
+          "baseline": 2,
+          "mask": 2,
+          "baseline_error": 8,
+          "mask_error": 8
+        },
+        "vegetationmisc": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "othermoving": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        },
+        "fence": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "tree": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        },
+        "sidewalk": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "column_pole": {
+          "ground_truth": 14,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 14,
+          "mask_error": 14
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 34,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 34,
+          "mask_error": 34
+        },
+        "road": {
+          "ground_truth": 8,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 8,
+          "mask_error": 7
+        },
+        "truck_bus": {
+          "ground_truth": 4,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 4,
+          "mask_error": 4
+        },
+        "signsymbol": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "trafficlight": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "building": {
+          "ground_truth": 18,
+          "baseline": 2,
+          "mask": 2,
+          "baseline_error": 16,
+          "mask_error": 16
+        },
+        "wall": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "sky": {
+          "ground_truth": 32,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 32,
+          "mask_error": 32
+        },
+        "suvpickuptruck": {
+          "ground_truth": 14,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 14,
+          "mask_error": 14
+        },
+        "misc_text": {
+          "ground_truth": 25,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 25,
+          "mask_error": 25
+        }
+      },
+      "baseline_hallucination_rate": 0.03508771929824561,
+      "mask_hallucination_rate": 0.03225806451612903,
+      "baseline_hallucinated_objects": [
+        "pedestrian",
+        "bicycle",
+        "scaffold",
+        "storefront"
+      ],
+      "mask_hallucinated_objects": [
+        "pedestrian",
+        "bicycle"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "0016E5_07969.png",
+      "counting_baseline_mae": 12.0,
+      "counting_mask_mae": 11.85,
+      "counting_baseline_rmse": 20.33961651555899,
+      "counting_mask_rmse": 20.22992832414391,
+      "counting_details": {
+        "vegetationmisc": {
+          "ground_truth": 4,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 4,
+          "mask_error": 4
+        },
+        "tree": {
+          "ground_truth": 45,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 45,
+          "mask_error": 44
+        },
+        "bicyclist": {
+          "ground_truth": 8,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 8,
+          "mask_error": 8
+        },
+        "trafficlight": {
+          "ground_truth": 6,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 6,
+          "mask_error": 6
+        },
+        "signsymbol": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "misc_text": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "parkingblock": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "othermoving": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        },
+        "road": {
+          "ground_truth": 13,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 13,
+          "mask_error": 13
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 19,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 19,
+          "mask_error": 19
+        },
+        "truck_bus": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "car": {
+          "ground_truth": 2,
+          "baseline": 4,
+          "mask": 2,
+          "baseline_error": 2,
+          "mask_error": 0
+        },
+        "building": {
+          "ground_truth": 11,
+          "baseline": 2,
+          "mask": 1,
+          "baseline_error": 9,
+          "mask_error": 10
+        },
+        "suvpickuptruck": {
+          "ground_truth": 4,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 4,
+          "mask_error": 4
+        },
+        "fence": {
+          "ground_truth": 8,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 8,
+          "mask_error": 8
+        },
+        "sidewalk": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        },
+        "column_pole": {
+          "ground_truth": 23,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 23,
+          "mask_error": 23
+        },
+        "sky": {
+          "ground_truth": 69,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 69,
+          "mask_error": 69
+        },
+        "pedestrian": {
+          "ground_truth": 9,
+          "baseline": 1,
+          "mask": 2,
+          "baseline_error": 8,
+          "mask_error": 7
+        },
+        "wall": {
+          "ground_truth": 4,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 4,
+          "mask_error": 4
+        }
+      },
+      "baseline_hallucination_rate": 0.010869565217391304,
+      "mask_hallucination_rate": 0.125,
+      "baseline_hallucinated_objects": [
+        "person"
+      ],
+      "mask_hallucinated_objects": [
+        "parked"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "0016E5_08029.png",
+      "counting_baseline_mae": 11.5,
+      "counting_mask_mae": 11.75,
+      "counting_baseline_rmse": 17.25108692227826,
+      "counting_mask_rmse": 17.582661914511124,
+      "counting_details": {
+        "vegetationmisc": {
+          "ground_truth": 8,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 8,
+          "mask_error": 8
+        },
+        "tree": {
+          "ground_truth": 51,
+          "baseline": 3,
+          "mask": 1,
+          "baseline_error": 48,
+          "mask_error": 50
+        },
+        "bicyclist": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        },
+        "trafficlight": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "signsymbol": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "misc_text": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        },
+        "parkingblock": {
+          "ground_truth": 11,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 11,
+          "mask_error": 11
+        },
+        "othermoving": {
+          "ground_truth": 8,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 8,
+          "mask_error": 8
+        },
+        "road": {
+          "ground_truth": 13,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 13,
+          "mask_error": 13
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 23,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 23,
+          "mask_error": 23
+        },
+        "truck_bus": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "car": {
+          "ground_truth": 2,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "building": {
+          "ground_truth": 9,
+          "baseline": 2,
+          "mask": 1,
+          "baseline_error": 7,
+          "mask_error": 8
+        },
+        "suvpickuptruck": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "fence": {
+          "ground_truth": 5,
+          "baseline": 1,
+          "mask": 0,
+          "baseline_error": 4,
+          "mask_error": 5
+        },
+        "sidewalk": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        },
+        "column_pole": {
+          "ground_truth": 27,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 27,
+          "mask_error": 27
+        },
+        "sky": {
+          "ground_truth": 41,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 41,
+          "mask_error": 41
+        },
+        "pedestrian": {
+          "ground_truth": 8,
+          "baseline": 3,
+          "mask": 2,
+          "baseline_error": 5,
+          "mask_error": 6
+        },
+        "wall": {
+          "ground_truth": 9,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 9,
+          "mask_error": 9
+        }
+      },
+      "baseline_hallucination_rate": 0.1,
+      "mask_hallucination_rate": 0.2222222222222222,
+      "baseline_hallucinated_objects": [
+        "van",
+        "marked"
+      ],
+      "mask_hallucinated_objects": [
+        "arrow",
+        "person"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "Seq05VD_f00240.png",
+      "counting_baseline_mae": 32.89473684210526,
+      "counting_mask_mae": 33.05263157894737,
+      "counting_baseline_rmse": 60.78910913538447,
+      "counting_mask_rmse": 60.837142394567174,
+      "counting_details": {
+        "vegetationmisc": {
+          "ground_truth": 6,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 6,
+          "mask_error": 6
+        },
+        "tree": {
+          "ground_truth": 208,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 208,
+          "mask_error": 208
+        },
+        "trafficlight": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "signsymbol": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "misc_text": {
+          "ground_truth": 12,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 12,
+          "mask_error": 12
+        },
+        "parkingblock": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "othermoving": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "road": {
+          "ground_truth": 34,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 34,
+          "mask_error": 33
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 39,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 39,
+          "mask_error": 39
+        },
+        "car": {
+          "ground_truth": 1,
+          "baseline": 2,
+          "mask": 4,
+          "baseline_error": 1,
+          "mask_error": 3
+        },
+        "building": {
+          "ground_truth": 65,
+          "baseline": 2,
+          "mask": 1,
+          "baseline_error": 63,
+          "mask_error": 64
+        },
+        "archway": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "roadshoulder": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        },
+        "fence": {
+          "ground_truth": 14,
+          "baseline": 2,
+          "mask": 0,
+          "baseline_error": 12,
+          "mask_error": 14
+        },
+        "sidewalk": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 5,
+          "mask_error": 4
+        },
+        "column_pole": {
+          "ground_truth": 95,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 95,
+          "mask_error": 95
+        },
+        "sky": {
+          "ground_truth": 100,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 100,
+          "mask_error": 100
+        },
+        "pedestrian": {
+          "ground_truth": 4,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "wall": {
+          "ground_truth": 29,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 29,
+          "mask_error": 29
+        }
+      },
+      "baseline_hallucination_rate": 0.125,
+      "mask_hallucination_rate": 0.0,
+      "baseline_hallucinated_objects": [
+        "prominent",
+        "more"
+      ],
+      "mask_hallucinated_objects": [],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "Seq05VD_f01170.png",
+      "counting_baseline_mae": 18.823529411764707,
+      "counting_mask_mae": 16.0,
+      "counting_baseline_rmse": 28.68284996915302,
+      "counting_mask_rmse": 23.867280088513006,
+      "counting_details": {
+        "car": {
+          "ground_truth": 3,
+          "baseline": 2,
+          "mask": 1,
+          "baseline_error": 1,
+          "mask_error": 2
+        },
+        "vegetationmisc": {
+          "ground_truth": 15,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 15,
+          "mask_error": 15
+        },
+        "othermoving": {
+          "ground_truth": 13,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 13,
+          "mask_error": 13
+        },
+        "fence": {
+          "ground_truth": 8,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 8,
+          "mask_error": 8
+        },
+        "tree": {
+          "ground_truth": 61,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 61,
+          "mask_error": 60
+        },
+        "sidewalk": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "column_pole": {
+          "ground_truth": 31,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 31,
+          "mask_error": 31
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 38,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 38,
+          "mask_error": 38
+        },
+        "road": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 1,
+          "mask_error": 0
+        },
+        "signsymbol": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "pedestrian": {
+          "ground_truth": 15,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 14,
+          "mask_error": 14
+        },
+        "truck_bus": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "building": {
+          "ground_truth": 23,
+          "baseline": 91,
+          "mask": 2,
+          "baseline_error": 68,
+          "mask_error": 21
+        },
+        "wall": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        },
+        "sky": {
+          "ground_truth": 50,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 50,
+          "mask_error": 50
+        },
+        "suvpickuptruck": {
+          "ground_truth": 4,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 4,
+          "mask_error": 4
+        },
+        "misc_text": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        }
+      },
+      "baseline_hallucination_rate": 0.03773584905660377,
+      "mask_hallucination_rate": 0.2222222222222222,
+      "baseline_hallucinated_objects": [
+        "bicycle",
+        "sign",
+        "brick",
+        "curb"
+      ],
+      "mask_hallucinated_objects": [
+        "bicycle",
+        "sign"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "Seq05VD_f01380.png",
+      "counting_baseline_mae": 43.8125,
+      "counting_mask_mae": 40.4375,
+      "counting_baseline_rmse": 87.90655550071337,
+      "counting_mask_rmse": 85.93420448226655,
+      "counting_details": {
+        "parkingblock": {
+          "ground_truth": 2,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 2,
+          "mask_error": 2
+        },
+        "car": {
+          "ground_truth": 5,
+          "baseline": 3,
+          "mask": 2,
+          "baseline_error": 2,
+          "mask_error": 3
+        },
+        "othermoving": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "fence": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 5,
+          "mask_error": 4
+        },
+        "tree": {
+          "ground_truth": 255,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 255,
+          "mask_error": 254
+        },
+        "sidewalk": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 5,
+          "mask_error": 4
+        },
+        "column_pole": {
+          "ground_truth": 45,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 45,
+          "mask_error": 45
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 41,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 41,
+          "mask_error": 41
+        },
+        "road": {
+          "ground_truth": 9,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 9,
+          "mask_error": 8
+        },
+        "pedestrian": {
+          "ground_truth": 15,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 14,
+          "mask_error": 14
+        },
+        "trafficlight": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "building": {
+          "ground_truth": 25,
+          "baseline": 99,
+          "mask": 2,
+          "baseline_error": 74,
+          "mask_error": 23
+        },
+        "wall": {
+          "ground_truth": 6,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 6,
+          "mask_error": 6
+        },
+        "sky": {
+          "ground_truth": 221,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 221,
+          "mask_error": 221
+        },
+        "suvpickuptruck": {
+          "ground_truth": 4,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 4,
+          "mask_error": 4
+        },
+        "misc_text": {
+          "ground_truth": 14,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 14,
+          "mask_error": 14
+        }
+      },
+      "baseline_hallucination_rate": 0.026785714285714284,
+      "mask_hallucination_rate": 0.16666666666666666,
+      "baseline_hallucinated_objects": [
+        "brick",
+        "metal",
+        "storefront"
+      ],
+      "mask_hallucinated_objects": [
+        "brick",
+        "sign"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "Seq05VD_f01770.png",
+      "counting_baseline_mae": 43.25,
+      "counting_mask_mae": 43.05,
+      "counting_baseline_rmse": 100.030245426071,
+      "counting_mask_rmse": 99.6541519456164,
+      "counting_details": {
+        "vegetationmisc": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        },
+        "tree": {
+          "ground_truth": 362,
+          "baseline": 0,
+          "mask": 2,
+          "baseline_error": 362,
+          "mask_error": 360
+        },
+        "bicyclist": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "trafficlight": {
+          "ground_truth": 10,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 10,
+          "mask_error": 10
+        },
+        "signsymbol": {
+          "ground_truth": 13,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 13,
+          "mask_error": 13
+        },
+        "misc_text": {
+          "ground_truth": 9,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 9,
+          "mask_error": 9
+        },
+        "parkingblock": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "othermoving": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        },
+        "road": {
+          "ground_truth": 22,
+          "baseline": 0,
+          "mask": 1,
+          "baseline_error": 22,
+          "mask_error": 21
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 37,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 37,
+          "mask_error": 37
+        },
+        "car": {
+          "ground_truth": 4,
+          "baseline": 2,
+          "mask": 1,
+          "baseline_error": 2,
+          "mask_error": 3
+        },
+        "building": {
+          "ground_truth": 36,
+          "baseline": 2,
+          "mask": 2,
+          "baseline_error": 34,
+          "mask_error": 34
+        },
+        "suvpickuptruck": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "roadshoulder": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        },
+        "fence": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "sidewalk": {
+          "ground_truth": 6,
+          "baseline": 0,
+          "mask": 2,
+          "baseline_error": 6,
+          "mask_error": 4
+        },
+        "column_pole": {
+          "ground_truth": 79,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 79,
+          "mask_error": 79
+        },
+        "sky": {
+          "ground_truth": 243,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 243,
+          "mask_error": 243
+        },
+        "pedestrian": {
+          "ground_truth": 16,
+          "baseline": 2,
+          "mask": 2,
+          "baseline_error": 14,
+          "mask_error": 14
+        },
+        "wall": {
+          "ground_truth": 7,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 7,
+          "mask_error": 7
+        }
+      },
+      "baseline_hallucination_rate": 0.022222222222222223,
+      "mask_hallucination_rate": 0.11764705882352941,
+      "baseline_hallucinated_objects": [
+        "dog",
+        "further"
+      ],
+      "mask_hallucinated_objects": [
+        "purple",
+        "gray"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    },
+    {
+      "image_name": "Seq05VD_f04140.png",
+      "counting_baseline_mae": 33.23529411764706,
+      "counting_mask_mae": 33.11764705882353,
+      "counting_baseline_rmse": 65.22765562875558,
+      "counting_mask_rmse": 65.15185880604139,
+      "counting_details": {
+        "parkingblock": {
+          "ground_truth": 9,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 9,
+          "mask_error": 9
+        },
+        "car": {
+          "ground_truth": 5,
+          "baseline": 2,
+          "mask": 2,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "vegetationmisc": {
+          "ground_truth": 3,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 3,
+          "mask_error": 3
+        },
+        "roadshoulder": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "fence": {
+          "ground_truth": 4,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 4,
+          "mask_error": 4
+        },
+        "tree": {
+          "ground_truth": 194,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 194,
+          "mask_error": 194
+        },
+        "sidewalk": {
+          "ground_truth": 9,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 9,
+          "mask_error": 9
+        },
+        "column_pole": {
+          "ground_truth": 68,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 68,
+          "mask_error": 68
+        },
+        "lanemkgsdriv": {
+          "ground_truth": 27,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 27,
+          "mask_error": 27
+        },
+        "road": {
+          "ground_truth": 16,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 16,
+          "mask_error": 16
+        },
+        "signsymbol": {
+          "ground_truth": 1,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 1,
+          "mask_error": 1
+        },
+        "pedestrian": {
+          "ground_truth": 5,
+          "baseline": 1,
+          "mask": 1,
+          "baseline_error": 4,
+          "mask_error": 4
+        },
+        "building": {
+          "ground_truth": 43,
+          "baseline": 0,
+          "mask": 2,
+          "baseline_error": 43,
+          "mask_error": 41
+        },
+        "wall": {
+          "ground_truth": 5,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 5,
+          "mask_error": 5
+        },
+        "sky": {
+          "ground_truth": 164,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 164,
+          "mask_error": 164
+        },
+        "suvpickuptruck": {
+          "ground_truth": 6,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 6,
+          "mask_error": 6
+        },
+        "misc_text": {
+          "ground_truth": 8,
+          "baseline": 0,
+          "mask": 0,
+          "baseline_error": 8,
+          "mask_error": 8
+        }
+      },
+      "baseline_hallucination_rate": 0.015873015873015872,
+      "mask_hallucination_rate": 0.06666666666666667,
+      "baseline_hallucinated_objects": [
+        "sign"
+      ],
+      "mask_hallucinated_objects": [
+        "sign"
+      ],
+      "llm_evaluation": {
+        "baseline_score": null,
+        "mask_score": null,
+        "feedback": "OpenAI API key not provided",
+        "error": "API key missing"
+      }
+    }
+  ]
+}
