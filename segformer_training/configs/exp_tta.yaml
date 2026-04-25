@@ -1,0 +1,14 @@
+_base_: "baseline.yaml"
+
+experiment:
+  name: "exp_tta"
+  tags: ["phase4", "tta"]
+
+evaluation:
+  tta:
+    enabled: true
+    scales: [0.75, 1.0, 1.25]
+    flip: true
+
+training:
+  report_to: "none"

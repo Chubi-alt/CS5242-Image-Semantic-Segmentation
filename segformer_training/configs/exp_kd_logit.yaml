@@ -1,0 +1,18 @@
+_base_: "base.yaml"
+
+experiment:
+  name: "exp_kd_logit"
+  tags: ["kd", "logit", "b0_student", "b2_teacher"]
+
+training:
+  num_train_epochs: 60
+  learning_rate: 4.0e-5
+
+kd:
+  enabled: true
+  method: "logit"
+  # Set this at runtime:
+  #   --set kd.teacher_checkpoint=/path/to/.../checkpoints/best/full_model.pt
+  teacher_checkpoint: null
+  temperature: 4.0
+  alpha: 0.5

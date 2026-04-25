@@ -1,0 +1,17 @@
+_base_: "base.yaml"
+
+experiment:
+  name: "exp_aug_strong"
+  tags: ["phase3", "augmentation", "strong"]
+
+augmentation:
+  strategy: "strong"
+  random_scale:
+    enabled: true
+  color_jitter:
+    enabled: true
+  gaussian_blur:
+    enabled: true
+
+training:
+  report_to: "none"

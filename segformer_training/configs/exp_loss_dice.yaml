@@ -1,0 +1,11 @@
+_base_: "base.yaml"
+
+experiment:
+  name: "exp_loss_dice"
+  tags: ["phase3", "loss", "dice"]
+
+loss:
+  type: "dice"
+
+training:
+  report_to: "none"

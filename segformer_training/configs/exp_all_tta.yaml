@@ -1,0 +1,14 @@
+_base_: "exp_all.yaml"
+
+experiment:
+  name: "exp_all_tta"
+  tags: ["phase4", "all", "tta"]
+
+evaluation:
+  tta:
+    enabled: true
+    scales: [0.75, 1.0, 1.25]
+    flip: true
+
+training:
+  report_to: "none"

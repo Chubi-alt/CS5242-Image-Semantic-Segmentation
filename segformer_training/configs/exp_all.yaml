@@ -1,0 +1,32 @@
+_base_: "exp_loss_combined.yaml"
+
+experiment:
+  name: "exp_all"
+  tags: ["phase3", "all"]
+
+model:
+  auxiliary_heads:
+    enabled: true
+    stages: [2, 3]
+    weight: 0.4
+    channels: 256
+
+loss:
+  ohem:
+    enabled: true
+    ratio: 0.7
+
+augmentation:
+  strategy: "classmix"
+  random_scale:
+    enabled: true
+  color_jitter:
+    enabled: true
+  gaussian_blur:
+    enabled: true
+  classmix:
+    prob: 0.5
+    num_classes: null
+
+training:
+  report_to: "none"

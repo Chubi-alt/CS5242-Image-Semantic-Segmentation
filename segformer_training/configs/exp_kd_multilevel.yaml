@@ -1,0 +1,18 @@
+_base_: "base.yaml"
+
+experiment:
+  name: "exp_kd_multilevel"
+  tags: ["kd", "multilevel", "b0_student", "b2_teacher"]
+
+training:
+  num_train_epochs: 60
+  learning_rate: 4.0e-5
+
+kd:
+  enabled: true
+  method: "multilevel"
+  teacher_checkpoint: null
+  temperature: 4.0
+  alpha: 0.5
+  feature_weight: 0.5
+  stage_weight: 0.3
