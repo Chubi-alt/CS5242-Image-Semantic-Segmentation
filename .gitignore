@@ -1,5 +1,5 @@
 # --- Data and Datasets ---
-data/
+data
 # Ignore any specific large zip files
 *.zip
 *.tar.gz
