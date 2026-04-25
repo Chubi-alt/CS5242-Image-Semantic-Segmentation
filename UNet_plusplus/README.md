@@ -1,45 +1,147 @@
-## UNet++ Semantic Segmentation on CamVid
-Created by: Li Junxian
+# UNet++ Semantic Segmentation on CamVid
+
+UNet++ with ASPP for 32-class semantic segmentation on the CamVid dataset.
+Best result: **EfficientNet-B4 V3**, test mIoU = **0.521** on the clear test set.
 
 ---
 
-### Overview
+## Repository Structure
 
-This repository contains the UNet++ implementation for 32-class semantic segmentation on the CamVid dataset, as part of Stage 1 parallel benchmarking. Starting from a vanilla UNet++ baseline, three progressive improvement stages are developed and evaluated across multiple backbone encoders.
-
-**Key result:** EfficientNet-B4 V3 achieves **mIoU = 0.521** on the clear test set, a **+0.14 absolute improvement** over the EfficientNet-B3 baseline.
-
----
-
-### Dataset
-
-- **CamVid** with 32 semantic classes (31 categories + Void at index 30)
-- ~367 training images; severe class imbalance
-- Dominant classes: Road (28.1%), Building (23.5%), Sky (16.3%)
-- Rare classes: Animal (0.005%), TrafficCone (0.003%)
-
----
-
-### Optimisation Stages
-
-**V1 — Training Strategy**
-- Driving-scene data augmentation: horizontal flip, affine transforms, colour jitter, fog simulation, grid distortion, coarse dropout
-- Linear warmup (10 epochs) + cosine annealing LR schedule
-- Differential learning rates: encoder at `lr × 0.1`, decoder/head at full `lr`
-
-**V2 — Loss Function**
-- TripleLoss: CrossEntropy (0.2) + Dice (0.5) + Focal (0.3)
-- Sqrt-smoothed median-frequency class weights, clipped at 3.0
-- Label smoothing ε = 0.1
-
-**V3 — Architecture Enhancement**
-- ASPP module inserted at encoder bottleneck: parallel atrous convolutions at dilation rates {1, 6, 12, 18} + global average pooling
-- GroupNorm replaces BatchNorm in global pooling branch (avoids 1×1 spatial degeneration)
-- Input resolution increased from 512×512 to 640×640
+```
+UNet_plusplus/
+├── models/
+│   ├── builder.py              # Model factory (SMP + scratch)
+│   └── my_unetpp.py            # Hand-rolled UNet++ implementation
+├── utils/
+│   ├── dataset.py              # CamVidDataset
+│   ├── helpers.py              # Experiment utilities
+│   └── visualizer.py           # Plotting and visualisation
+├── evaluation_matrix/
+│   ├── miou.py
+│   ├── pixel_accuracy.py
+│   ├── dice_coefficient.py
+│   ├── fwiou.py
+│   └── boundary_iou.py
+├── scripts/
+│   └── outputs/
+│       └── class_stats.csv     # Pre-computed pixel frequency stats
+├── train_aspp.py               # Training script (EfficientNet-B3/B4, V3)
+├── train_aspp_resnet50.py      # Training script (ResNet-50, V3)
+├── train_weighted_loss.py      # Training script (V1/V2 baselines)
+├── test_and_vis.py             # Evaluation and visualisation
+└── fill_dice.py                # Utility: fill missing val_dice in CSV
+```
 
 ---
 
-### Results — Clear Test Set
+## Environment Setup
+
+```bash
+pip install torch torchvision segmentation-models-pytorch albumentations \
+            opencv-python-headless pandas numpy matplotlib tqdm
+```
+
+Tested on Python 3.10, PyTorch 2.0, NVIDIA L4 24GB.
+
+---
+
+## Dataset
+
+Download the CamVid dataset and place it under `../data/CamVid/` relative to this folder:
+
+```
+data/CamVid/
+├── train/                  # Training images
+├── train_labels_indexed/   # Indexed segmentation masks (0-31)
+├── val/
+├── val_labels_indexed/
+├── test/
+├── test_labels_indexed/
+└── class_dict.csv          # Class name and RGB colour mapping
+```
+
+The indexed masks use integer values 0–31 corresponding to rows in `class_dict.csv`. Class 30 (Void, RGB `[0,0,0]`) is excluded from all loss computations and evaluation metrics.
+
+---
+
+## Training
+
+### Improved V3 — EfficientNet-B3 / B4 (ASPP + 640px)
+
+```bash
+python train_aspp.py
+```
+
+Key configuration (edit at the top of `train_aspp.py`):
+
+| Parameter | Value |
+|---|---|
+| `BACKBONE` | `efficientnet-b3` or `efficientnet-b4` |
+| `ENCODER_LAST_CHANNELS` | 384 (B3) / 448 (B4) |
+| `BATCH_SIZE` | 12 (B3) / 10 (B4) |
+| `IMG_SIZE` | 640 |
+| `EPOCHS` | 200 |
+| `PATIENCE` | 20 |
+
+### Improved V3 — ResNet-50 (ASPP + 640px)
+
+```bash
+python train_aspp_resnet50.py
+```
+
+Key configuration:
+
+| Parameter | Value |
+|---|---|
+| `BACKBONE` | `resnet50` |
+| `ENCODER_LAST_CHANNELS` | 2048 |
+| `BATCH_SIZE` | 8 |
+| `IMG_SIZE` | 640 |
+
+### Improved V1 / V2 Baselines
+
+```bash
+python train_weighted_loss.py
+```
+
+Set `BACKBONE` to `resnet34`, `resnet50`, `efficientnet-b3`, or `scratch`.
+
+### Resuming Training
+
+Set `RESUME_CHECKPOINT` to the path of an existing `best.pth`:
+
+```python
+RESUME_CHECKPOINT = "checkpoints/your_experiment_name/best.pth"
+```
+
+The script automatically restores training history, best mIoU, and learning rate scheduler state.
+
+---
+
+## Evaluation
+
+```bash
+python test_and_vis.py
+```
+
+Edit the configuration at the top of `test_and_vis.py`:
+
+```python
+EXPERIMENT_NAME       = "unetpp_efficientnet-b4_improved_v3_XXXXXXXX_XXXX"
+BACKBONE              = "efficientnet-b4"
+ENCODER_LAST_CHANNELS = 448
+USE_ASPP              = True
+IMG_SIZE              = 640
+WEATHER               = "clear"   # or "rainy"
+```
+
+Outputs are saved to `outputs/{EXPERIMENT_NAME}/test_results/`:
+- `performance_on_{WEATHER}.txt` — quantitative metrics
+- `test_prediction_on_{WEATHER}_*.png` — qualitative visualisations
+
+---
+
+## Results — Clear Test Set
 
 | Backbone | Version | mIoU | Pixel Acc | Mean Dice | FWIoU | Boundary IoU |
 |---|---|---|---|---|---|---|
@@ -60,22 +162,32 @@ This repository contains the UNet++ implementation for 32-class semantic segment
 
 ---
 
-### Implementation Details
+## Optimisation Summary
 
-| Config | Value |
-|---|---|
-| Optimizer | AdamW, weight decay 1e-3 |
-| Base LR | 8e-4 (scaled by batch size) |
-| Batch size | 12 (B3), 10 (B4), 8 (ResNet-50) |
-| Max epochs | 200 with early stopping (patience = 20) |
-| Mixed precision | torch.amp |
-| Hardware | NVIDIA L4 24GB |
+| Version | Key Changes | mIoU Gain |
+|---|---|---|
+| Baseline | Standard UNet++, CrossEntropy, fixed LR | — |
+| V1 | Augmentation, warmup + cosine LR, differential LR | +0.07~0.12 |
+| V2 | TripleLoss (CE+Dice+Focal), sqrt class weights | +0.01~0.02 |
+| V3 | ASPP at encoder bottleneck, 512→640 resolution | +0.02~0.04 |
 
 ---
 
-### Key Observations
+## Checkpoint Format
 
-- Training strategy (V1) contributes the largest single gain (+0.07~0.12 mIoU)
-- Pretrained backbones outperform scratch by 0.08~0.10 across all versions
-- ASPP + higher resolution (V3) provides the most significant architectural improvement
-- EfficientNet-B4 achieves the best test generalisation despite ResNet-50 having higher validation mIoU
+V3 checkpoints (with ASPP) are saved as a dict:
+
+```python
+{
+    "model_state_dict": model.state_dict(),
+    "aspp_state_dict":  aspp.state_dict(),
+}
+```
+
+V1/V2 checkpoints are plain `model.state_dict()`.
+
+---
+
+## Hardware
+
+Trained on NVIDIA L4 24GB. Approximate training time per experiment: 3–6 hours.
